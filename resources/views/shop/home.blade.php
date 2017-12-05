@@ -73,7 +73,8 @@
                                     <div class="funkyradio-{{$siteArray[$sizeCounter]}}">
                                         @if($sizeCounter == 1)
                                             <input type="radio" name="radio-{{$product->id}}"
-                                                   id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$size->sizer_id}}"
+                                                   id="radio{{$sizeCounter}}-{{$product->id}}"
+                                                   value="{{$size->sizer_id}}"
                                                    checked/>
                                         @else
                                             <input type="radio" name="radio-{{$product->id}}"
@@ -107,6 +108,9 @@
             <script>
                 var CartCount = {{ Session::has("cart") ? Session::get("cart")->totalQty : "0" }} ;
                 var size;
+
+
+
                 @forelse($products as $productsjs)
                 $("#product-{{$productsjs->id}}").click(function () {
                     var radios{{$productsjs->id}} = document.getElementsByName('radio-{{$productsjs->id}}');
@@ -114,14 +118,13 @@
                         if (radios{{$productsjs->id}}[i].checked) {
                             // do whatever you want with the checked radio
                             size = radios{{$productsjs->id}}[i].value;
-
                             // only one radio can be logically checked, don't check the rest
                             break;
                         }
                     }
                     $.ajax({
                         type: "get",
-                        url: "{{route("product.addToCartAjax", $productsjs->id, size)}}", // insert product with specific size into session
+                        url: '/add-to-cart/{{$productsjs->id}}/' + size,
                         success: function () {
                             CartCount++;
                             $("#shoppingCartCounter").html(CartCount);
