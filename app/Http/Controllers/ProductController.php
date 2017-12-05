@@ -16,7 +16,7 @@ class ProductController extends Controller
         return view('shop.home', compact("products"));
     }
 
-    public function addToCartAjax(Request $request, $id)
+    public function addToCartAjax(Request $request, $id, $size)
     {
         $product = Product::findOrFail($id);
         $oldCart = Session::has("cart") ? Session::get("cart") : null;

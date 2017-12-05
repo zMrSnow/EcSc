@@ -73,14 +73,14 @@
                                     <div class="funkyradio-{{$siteArray[$sizeCounter]}}">
                                         @if($sizeCounter == 1)
                                             <input type="radio" name="radio-{{$product->id}}"
-                                                   id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}"
+                                                   id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$size->sizer_id}}"
                                                    checked/>
                                         @else
                                             <input type="radio" name="radio-{{$product->id}}"
                                                    id="radio{{$sizeCounter}}-{{$product->id}}"
-                                                   value="{{$sizeCounter}}"/>
+                                                   value="{{$size->sizer_id}}"/>
                                         @endif
-                                        <label for="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}">
+                                        <label for="radio{{$sizeCounter}}-{{$product->id}}" value="{{$size->sizer_id}}">
                                             {{$size->sizerName($size->sizer_id)}}
                                             -
                                             {{$size->quantities}}
@@ -121,12 +121,12 @@
                     }
                     $.ajax({
                         type: "get",
-                        url: "{{route("product.addToCartAjax", $productsjs->id)}}",
+                        url: "{{route("product.addToCartAjax", $productsjs->id, size)}}", // insert product with specific size into session
                         success: function () {
                             CartCount++;
                             $("#shoppingCartCounter").html(CartCount);
                             console.log("Produkt bol pridani");
-                            console.log("Velkost produktu je : " + size); // size obsahuje hodnotu radioboxu
+                            console.log("Velkost produktu je : " + size); // size contain value of checked radio box
                         }
                     })
                 });
