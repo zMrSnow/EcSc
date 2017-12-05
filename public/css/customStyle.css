@@ -41,6 +41,7 @@
 
 .card-01 .badge-box i:hover {
     background: #df5122;
+    cursor: pointer;
     color: #fff;
     border-radius: 50%;
     width: 50px;

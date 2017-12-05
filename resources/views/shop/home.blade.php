@@ -74,7 +74,7 @@
                                             <input type="radio" name="radio-{{$product->id}}"
                                                    id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" />
                                         @endif
-                                        <label for="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" >XS</label>
+                                        <label for="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" >M</label>
                                     </div>
 
 
@@ -99,7 +99,6 @@
         var size;
         @forelse($products as $productsjs)
             $("#product-{{$productsjs->id}}").click(function () {
-
                 var radios{{$productsjs->id}} = document.getElementsByName('radio-{{$productsjs->id}}');
                 for (var i = 0, length = radios{{$productsjs->id}}.length; i < length; i++)
                 {
@@ -112,7 +111,6 @@
                         break;
                     }
                 }
-
                 $.ajax({
                     type: "get",
                     url: "{{route("product.addToCartAjax", $productsjs->id)}}",
