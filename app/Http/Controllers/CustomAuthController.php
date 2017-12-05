@@ -26,8 +26,9 @@ class CustomAuthController extends Controller
     {
         $this->validation($request);
         $request['password'] = bcrypt($request->password);
-        User::create($request->all());
-        return redirect("/")->with("registered", "Práve si sa úspešne zaregistroval, teraz sa možeš prihlásiť");
+        $user = User::create($request->all());
+        Auth::login($user);
+        return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, teraz sa možeš prihlásiť");
     }
 
     public function postLogin(Request $request)
@@ -52,5 +53,8 @@ class CustomAuthController extends Controller
 
     public function profile() {
         return view("auth.userProfile");
+    }
+    public function orders() {
+        return view("auth.userOrders");
     }
 }

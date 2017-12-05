@@ -30,7 +30,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     @if(Auth::check())
                         <a class="dropdown-item" href="{{route("auth.profile")}}"><i class="fa fa-cog" aria-hidden="true"></i> Profil</a>
-                        <a class="dropdown-item" href="#"><i class="fa fa-list" aria-hidden="true"></i> Objednávky</a>
+                        <a class="dropdown-item" href="{{route("auth.orders")}}"><i class="fa fa-list" aria-hidden="true"></i> Objednávky</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{route("auth.logout")}}"><i class="fa fa-power-off" aria-hidden="true"></i> Odhlásiť sa</a>
                     @else
