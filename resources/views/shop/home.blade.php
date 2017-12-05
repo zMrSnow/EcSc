@@ -219,35 +219,36 @@
                             <hr>
 
                             <div class="funkyradio row m-auto">
-                                <div class="funkyradio-default">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio1-{{$product->id}}"/>
-                                    <label for="radio1-{{$product->id}}">XS</label>
-                                </div>
-                                <div class="funkyradio-primary">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio2-{{$product->id}}"
-                                           checked/>
-                                    <label for="radio2-{{$product->id}}">S</label>
-                                </div>
-                                <div class="funkyradio-success">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio3-{{$product->id}}"/>
-                                    <label for="radio3-{{$product->id}}">M</label>
-                                </div>
-                                <div class="funkyradio-danger">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio4-{{$product->id}}"/>
-                                    <label for="radio4-{{$product->id}}">L</label>
-                                </div>
-                                <div class="funkyradio-warning">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio5-{{$product->id}}"/>
-                                    <label for="radio5-{{$product->id}}">XL</label>
-                                </div>
-                                <div class="funkyradio-info">
-                                    <input type="radio" name="radio-{{$product->id}}" id="radio6-{{$product->id}}"/>
-                                    <label for="radio6-{{$product->id}}">XXL</label>
-                                </div>
+                                @php
+                                    $sizeCounter = 1;
+                                    $siteArray = [
+                                        "",
+                                        "default",
+                                        "primary",
+                                        "success",
+                                        "danger",
+                                         "warning",
+                                         "info"
+                                    ];
+                                @endphp
+                                @forelse($product->sizes as $size)
+                                    <div class="funkyradio-{{$siteArray[$sizeCounter]}}">
+                                        @if($sizeCounter == 1)
+                                            <input type="radio" name="radio-{{$product->id}}" id="radio{{$sizeCounter}}-{{$product->id}}" checked />
+                                        @else
+                                            <input type="radio" name="radio-{{$product->id}}" id="radio{{$sizeCounter}}-{{$product->id}}"/>
+                                        @endif
+                                        <label for="radio{{$sizeCounter}}-{{$product->id}}">XS</label>
+                                    </div>
+
+
+                                    @php
+                                        $sizeCounter++;
+                                    @endphp
+                                @empty
+                                @endforelse
                             </div>
-
                             <a href="#" class="btn btn-outline-info text-uppercase btn-block">Viac informácií</a>
-
                         </div>
                     </div>
                 </div>
