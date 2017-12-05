@@ -16,11 +16,12 @@ class CreateSizesTable extends Migration
         Schema::create('sizes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer("product_id")->unsigned()->index();
-            $table->string("name");
+            $table->integer("sizer_id")->unsigned()->index();
             $table->integer("quantities");
             $table->timestamps();
 
             $table->foreign("product_id")->references("id")->on("products")->onDelete("cascade");
+            $table->foreign("sizer_id")->references("id")->on("sizers")->onDelete("cascade");
         });
     }
 

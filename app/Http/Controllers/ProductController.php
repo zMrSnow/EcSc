@@ -10,17 +10,37 @@ use Session;
 class ProductController extends Controller
 {
 
-    public function home() {
+    public function home()
+    {
         $products = Product::all();
         return view('shop.home', compact("products"));
     }
 
-    public function addToCartAjax(Request $request, $id) {
+    public function addToCartAjax(Request $request, $id)
+    {
         $product = Product::findOrFail($id);
         $oldCart = Session::has("cart") ? Session::get("cart") : null;
-        $cart = new Cart($oldCart);
+        $cart    = new Cart($oldCart);
         $cart->add($product, $product->id);
 
         $request->session()->put("cart", $cart);
+    }
+
+    public function shopingCart()
+    {
+        if (!Session::has("cart")) {
+            return view("shop.shopingCart");
+        }
+        $cart = new Cart(Session::get("cart"));
+        $products = $cart->items;
+        $totalPrice = $cart->totalPrice;
+        $totalQty = $cart->totalQty;
+        //return $products;
+        return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
+
+    }
+
+    public function checkout() {
+
     }
 }
