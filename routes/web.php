@@ -1,6 +1,9 @@
 <?php
 
 
+use App\Product;
+
 Route::get('/', function () {
-    return view('shop.home');
+    $products = Product::all();
+    return view('shop.home', compact("products"));
 });
