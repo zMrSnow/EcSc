@@ -4,6 +4,7 @@
 use App\Product;
 
 Route::get('/', "ProductController@home")->name("product.home");
+Route::get('/add-to-cart/{id}', "ProductController@addToCartAjax")->name("product.addToCartAjax");
 
 
 Route::group(["prefix" => "auth"], function () {

@@ -46,7 +46,7 @@
                                     </a>
                         </div>
                         <div class="card-body">
-                            <span class="badge-box"><i class="fa fa-cart-plus" aria-hidden="true"></i></span>
+                            <span class="badge-box" id="product-{{$product->id}}"><i class="fa fa-cart-plus" aria-hidden="true"></i></span>
                             <span class="badge-box-price"><i class="fa fa-euro"
                                                              aria-hidden="true"></i> {{$product->price}}</span>
                             <h4 class="card-title">{{$product->name}}</h4>
@@ -69,12 +69,12 @@
                                     <div class="funkyradio-{{$siteArray[$sizeCounter]}}">
                                         @if($sizeCounter == 1)
                                             <input type="radio" name="radio-{{$product->id}}"
-                                                   id="radio{{$sizeCounter}}-{{$product->id}}" checked/>
+                                                   id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" checked/>
                                         @else
                                             <input type="radio" name="radio-{{$product->id}}"
-                                                   id="radio{{$sizeCounter}}-{{$product->id}}"/>
+                                                   id="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" />
                                         @endif
-                                        <label for="radio{{$sizeCounter}}-{{$product->id}}">XS</label>
+                                        <label for="radio{{$sizeCounter}}-{{$product->id}}" value="{{$sizeCounter}}" >XS</label>
                                     </div>
 
 
@@ -91,4 +91,40 @@
                 @empty
                 @endforelse
             </div>
+@endsection
+
+@section("script")
+    <script>
+        var CartCount = {{ Session::has("cart") ? Session::get("cart")->totalQty : "0" }} ;
+        var size;
+        @forelse($products as $productsjs)
+            $("#product-{{$productsjs->id}}").click(function () {
+
+                var radios{{$productsjs->id}} = document.getElementsByName('radio-{{$productsjs->id}}');
+                for (var i = 0, length = radios{{$productsjs->id}}.length; i < length; i++)
+                {
+                    if (radios{{$productsjs->id}}[i].checked)
+                    {
+                        // do whatever you want with the checked radio
+                        size = radios{{$productsjs->id}}[i].value;
+
+                        // only one radio can be logically checked, don't check the rest
+                        break;
+                    }
+                }
+
+                $.ajax({
+                    type: "get",
+                    url: "{{route("product.addToCartAjax", $productsjs->id)}}",
+                    success: function () {
+                        CartCount++;
+                        $("#shoppingCartCounter").html(CartCount);
+                        console.log("Produkt bol pridani");
+                        console.log("Velkost produktu je : " + size); // size obsahuje hodnotu radioboxu
+                    }
+                })
+            });
+        @empty
+        @endforelse
+    </script>
 @endsection
