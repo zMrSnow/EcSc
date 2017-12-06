@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Order;
 use App\Product;
+use Auth;
 use Illuminate\Http\Request;
 use Session;
 
@@ -35,12 +37,38 @@ class ProductController extends Controller
         $products = $cart->items;
         $totalPrice = $cart->totalPrice;
         $totalQty = $cart->totalQty;
-        return $products;
+        //return $products;
         return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
 
     }
 
     public function checkout() {
-        return view("shop.checkout");
+        if (!Session::has("cart")) {
+            return redirect()->back();
+        }
+        $oldCart = Session::get("cart");
+        $cart = new Cart($oldCart);
+        $total = $cart->totalPrice;
+        return view("shop.checkout", compact("oldCart", "total"));
+    }
+    public function postCheckout(Request $request) {
+        if (!Session::has("cart")) {
+            return redirect()->back();
+        }
+        $oldCart = Session::get("cart");
+        $cart = new Cart($oldCart);
+
+        $order = new Order();
+        $order->cart = serialize($cart);
+        $order->adress = $request->input("adress");
+        $order->city = $request->input("city");
+        $order->psc = $request->input("psc");
+        $order->name = $request->input("fname") . " " . $request->input("lname");
+        $order->price = $cart->totalPrice;
+
+        Auth::user()->orders()->save($order);
+
+        Session::forget("cart");
+        return redirect()->route("auth.profile")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
     }
 }

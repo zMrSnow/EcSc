@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
+use Session;
 
 class CustomAuthController extends Controller
 {
@@ -28,6 +29,11 @@ class CustomAuthController extends Controller
         $request['password'] = bcrypt($request->password);
         $user = User::create($request->all());
         Auth::login($user);
+        if (Session::has("oldUrl")) {
+            $oldUrl = Session::get("oldUrl");
+            Session::forget("oldUrl");
+            return redirect()->to($oldUrl)->with("msg", "Práve si sa úspešne zaregistroval, už si aj prihlásený.");
+        }
         return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, už si aj prihlásený.");
     }
 
@@ -39,6 +45,11 @@ class CustomAuthController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            if (Session::has("oldUrl")) {
+                $oldUrl = Session::get("oldUrl");
+                Session::forget("oldUrl");
+                return redirect()->to($oldUrl)->with("msg", "Práve si sa úspešne prihlásil.");
+            }
             return redirect("/")->with("msg", "Práve si sa úspešne prihlásil.");
         }
         return redirect("/")->with("msgDanger", " Neplatný email alebo heslo.");
@@ -52,9 +63,15 @@ class CustomAuthController extends Controller
 
 
     public function profile() {
+
         return view("auth.userProfile");
     }
     public function orders() {
-        return view("auth.userOrders");
+        $orders = Auth::user()->orders;
+        $orders->transform(function ($order, $key) {
+            $order->cart = unserialize($order->cart);
+            return $order;
+        });
+        return view("auth.userOrders", compact("orders"));
     }
 }

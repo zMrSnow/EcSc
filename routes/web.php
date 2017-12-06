@@ -6,7 +6,6 @@ use App\Product;
 Route::get('/', "ProductController@home")->name("product.home");
 Route::get('/add-to-cart/{id}/{size}', "ProductController@addToCartAjax")->name("product.addToCartAjax");
 Route::get('/shoping-cart', "ProductController@shopingCart")->name("product.shopingCart");
-Route::get('/checkout', "ProductController@checkout")->name("product.checkout");
 
 
 Route::group(["prefix" => "auth"], function () {
@@ -28,6 +27,13 @@ Route::group(["prefix" => "auth"], function () {
             ->name("auth.profile");
         Route::get("/orders", "CustomAuthController@orders")
             ->name("auth.orders");
+
+        // checkout
+
+        Route::get('/checkout', "ProductController@checkout")
+            ->name("product.checkout");
+        Route::post('/checkout', "ProductController@postCheckout")
+            ->name("product.postCheckout");
     });
 });
 
