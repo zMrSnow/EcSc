@@ -41,6 +41,6 @@ class ProductController extends Controller
     }
 
     public function checkout() {
-
+        return view("shop.checkout");
     }
 }

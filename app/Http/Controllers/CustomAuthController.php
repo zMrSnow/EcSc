@@ -28,7 +28,7 @@ class CustomAuthController extends Controller
         $request['password'] = bcrypt($request->password);
         $user = User::create($request->all());
         Auth::login($user);
-        return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, teraz sa možeš prihlásiť");
+        return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, už si aj prihlásený.");
     }
 
     public function postLogin(Request $request)
