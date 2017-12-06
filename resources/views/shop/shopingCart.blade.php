@@ -25,7 +25,7 @@
                         <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
                             <h4 class="product-name"><strong>{{$product["item"]["name"]}}</strong></h4>
                             <h4>
-                                <small>Product description</small>
+                                <small> </small>
                             </h4>
                         </div>
                         <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">

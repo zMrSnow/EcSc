@@ -35,7 +35,7 @@ class ProductController extends Controller
         $products = $cart->items;
         $totalPrice = $cart->totalPrice;
         $totalQty = $cart->totalQty;
-        //return $products;
+        return $products;
         return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
 
     }
