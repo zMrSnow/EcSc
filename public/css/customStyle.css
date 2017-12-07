@@ -229,3 +229,10 @@
 .shopping-cart {
     margin-top: 20px;
 }
+
+.break {
+    margin-top: 25px;
+}
+.break span {
+    margin-left: 5px;
+}

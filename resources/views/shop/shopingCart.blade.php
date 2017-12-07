@@ -78,6 +78,13 @@
         </div>
 
     @else
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Oops! nakupný košík je bohuzial prázdny :(</h4>
+            <hr>
+            <p class="mb-0">Pre pridanie produktu staci iba kliknut na ikongu nakupneho kosika <span class="fa fa-shopping-cart"></span>,
+                ktorý najdete pri kazdom produkte.
+            </p>
+        </div>
     @endif
 @endsection
 

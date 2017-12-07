@@ -69,6 +69,6 @@ class ProductController extends Controller
         Auth::user()->orders()->save($order);
 
         Session::forget("cart");
-        return redirect()->route("auth.profile")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
+        return redirect()->route("auth.orders")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
     }
 }
