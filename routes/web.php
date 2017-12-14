@@ -28,6 +28,10 @@ Route::group(["prefix" => "auth"], function () {
         Route::get("/orders", "CustomAuthController@orders")
             ->name("auth.orders");
 
+        // PayPal checkout
+        Route::get("/orderStatus", "PaypalController@orderStatus")
+            ->name("paypal.orderStatus");
+
         // checkout
 
         Route::get('/checkout', "ProductController@checkout")
