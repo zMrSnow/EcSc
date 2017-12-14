@@ -8,6 +8,7 @@
         </div>
     @empty
     @endforelse
+
 @endif
 @if(session('msg'))
     <div class="alert alert-success" role="alert">
@@ -16,6 +17,7 @@
             <span aria-hidden="true" class="text-dark">&times;</span>
         </button>
     </div>
+    @php  Session::forget("msg")  @endphp
 @endif
 @if(session('msgDanger'))
     <div class="alert alert-danger" role="alert">
@@ -24,4 +26,5 @@
             <span aria-hidden="true" class="text-dark">&times;</span>
         </button>
     </div>
+    @php  Session::forget("msgDanger")  @endphp
 @endif

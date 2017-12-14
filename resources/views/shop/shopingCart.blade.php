@@ -2,8 +2,6 @@
 
 @section('content')
     @if(Session::has("cart"))
-
-
         <div class="card shopping-cart">
             <div class="card-header bg-dark text-light">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>
@@ -90,7 +88,5 @@
 
 @section("script")
 
-    <script>
-    </script>
 
 @endsection

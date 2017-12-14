@@ -67,7 +67,12 @@
                         <div class="card-footer text-muted text-right">
                             Celkova suma: € {{$order->price}}
                             @if($order->status == 0)
-                                <a href="" class="btn btn-danger pull-left" data-toggle="modal" data-target="#paymentModal">Uhradiť moju objednávku</a>
+                                <form action="{{route("paypal.pay", $order->id)}}" method="post">
+                                    <button type="submit" class="btn btn-danger pull-left">
+                                        PayPall
+                                    </button>
+                                    {{ csrf_field() }}
+                                </form>
                             @endif
                         </div>
                     </div>
@@ -129,9 +134,6 @@
                         </div>
                         <div class="card-footer text-muted text-right">
                             Celkova suma: € {{$order->price}}
-                            @if($order->status == 0)
-                                <a href="" class="btn btn-danger pull-left" data-toggle="modal" data-target="#paymentModal">Uhradiť moju objednávku</a>
-                            @endif
                         </div>
                     </div>
                     <hr>
@@ -144,5 +146,4 @@
     <ul>
 
     </ul>
-    @include("partials.paymentModal")
 @endsection

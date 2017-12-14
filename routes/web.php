@@ -32,6 +32,10 @@ Route::group(["prefix" => "auth"], function () {
         Route::get("/orderStatus", "PaypalController@orderStatus")
             ->name("paypal.orderStatus");
 
+        // PayPal payment
+        Route::post("/pay/{t_id}", "PaypalController@postPaymentWithpaypal")
+            ->name("paypal.pay");
+
         // checkout
 
         Route::get('/checkout', "ProductController@checkout")
@@ -40,4 +44,6 @@ Route::group(["prefix" => "auth"], function () {
             ->name("product.postCheckout");
     });
 });
+
+
 
