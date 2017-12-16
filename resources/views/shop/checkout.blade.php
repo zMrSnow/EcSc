@@ -37,7 +37,7 @@
                     <label for="shipping_type" class="form-control bg-dark text-light">Typ dorucenia:</label>
                     <select class="form-control" name="shipping_type">
                         @forelse($shippings as $shipping)
-                            <option value="{{$shipping->id}}">{{$shipping->text}} - {{$shipping->price}}€</option>
+                            <option value="{{$shipping->id}}">{{$shipping->text}} - {{$shipping->price}}€ ({{$totalWeight}}g / {{$shipping->max_weight}}g)</option>
                         @empty
                         @endforelse
                     </select>

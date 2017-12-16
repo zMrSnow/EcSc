@@ -52,7 +52,7 @@ class ProductController extends Controller
         $total = $cart->totalPrice;
         $totalWeight = $cart->totalWeight;
 
-        $shippings = Shipping::all()->where("max_weight", ">", "=", $totalWeight);
+        $shippings = Shipping::all()->where("max_weight", ">=", $totalWeight);
 
         return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
     }
