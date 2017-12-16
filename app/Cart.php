@@ -15,6 +15,7 @@ class Cart
     public $info;
     public $totalQty = 0;
     public $totalPrice = 0;
+    public $totalWeight = 0;
 
     public function __construct($oldCart)
     {
@@ -22,6 +23,7 @@ class Cart
             $this->items      = $oldCart->items;
             $this->totalQty   = $oldCart->totalQty;
             $this->totalPrice = $oldCart->totalPrice;
+            $this->totalWeight = $oldCart->totalWeight;
         }
     }
 
@@ -66,5 +68,6 @@ class Cart
         $this->items[$id]     = $storedItems;
         $this->totalQty++;
         $this->totalPrice += $item->price;
+        $this->totalWeight += $item->weight;
     }
 }

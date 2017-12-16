@@ -22,10 +22,13 @@ class CreateOrdersTable extends Migration
             $table->string("psc");
             $table->string("name");
             $table->integer("price")->unsigned();
+            $table->integer("weight")->unsigned();
+            $table->integer("shipping_type")->unsigned()->index();
             $table->integer("status")->default(0);
             $table->timestamps();
 
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");
+            $table->foreign("shipping_type")->references("id")->on("shippings")->onDelete("cascade");
         });
     }
 

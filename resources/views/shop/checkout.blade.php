@@ -12,28 +12,37 @@
         </div>
 
         <form action="{{route("product.postCheckout")}}" method="post">
-                <div class="form-group  row">
-                    <div class="col-12 col-sm-6">
-                        <label for="fname" class="form-control bg-dark text-light">Meno:</label>
-                        <input type="text" name="fname" class="form-control">
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="lname" class="form-control bg-dark text-light">Priezvysko:</label>
-                        <input type="text" name="lname" class="form-control">
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="psc" class="form-control bg-dark text-light">PSČ:</label>
-                        <input type="text" name="psc" class="form-control">
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="city" class="form-control bg-dark text-light">Mesto:</label>
-                        <input type="text" name="city" class="form-control">
-                    </div>
-                    <div class="col-12 col-sm-6">
-                        <label for="adress" class="form-control bg-dark text-light">Adresa:</label>
-                        <input type="text" name="adress" class="form-control">
-                    </div>
+            <div class="form-group  row">
+                <div class="col-12 col-sm-6">
+                    <label for="fname" class="form-control bg-dark text-light">Meno:</label>
+                    <input type="text" name="fname" class="form-control">
                 </div>
+                <div class="col-12 col-sm-6">
+                    <label for="lname" class="form-control bg-dark text-light">Priezvysko:</label>
+                    <input type="text" name="lname" class="form-control">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="psc" class="form-control bg-dark text-light">PSČ:</label>
+                    <input type="text" name="psc" class="form-control">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="city" class="form-control bg-dark text-light">Mesto:</label>
+                    <input type="text" name="city" class="form-control">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="adress" class="form-control bg-dark text-light">Adresa:</label>
+                    <input type="text" name="adress" class="form-control">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <label for="shipping_type" class="form-control bg-dark text-light">Typ dorucenia:</label>
+                    <select class="form-control" name="shipping_type">
+                        @forelse($shippings as $shipping)
+                            <option value="{{$shipping->id}}">{{$shipping->text}} - {{$shipping->price}}€</option>
+                        @empty
+                        @endforelse
+                    </select>
+                </div>
+            </div>
 
             <button type="submit" class="btn btn-block btn-success pull-right">Objednať</button>
             {{ csrf_field() }}

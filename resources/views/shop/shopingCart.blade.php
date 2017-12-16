@@ -69,7 +69,7 @@
                 <div class="pull-right" style="margin: 10px">
                     <a href="{{route("product.checkout")}}" class="btn btn-success pull-right">Objednať</a>
                     <div class="pull-right" style="margin: 5px">
-                        Celková cena: <b>{{$totalPrice + 2}}.00€</b>
+                        Celková cena bez poštovného: <b>{{$totalPrice}}.00€</b>
                     </div>
                 </div>
             </div>

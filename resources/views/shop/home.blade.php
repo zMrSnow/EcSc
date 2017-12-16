@@ -55,6 +55,7 @@
                                                              aria-hidden="true"></i> {{$product->price}}</span>
                             <h4 class="card-title">{{$product->name}}</h4>
                             <hr>
+                            <p>{{$product->description}}</p>
 
                             <div class="funkyradio row m-auto">
                                 @php
@@ -95,7 +96,7 @@
                                 @empty
                                 @endforelse
                             </div>
-                            <a href="#" class="btn btn-outline-info text-uppercase btn-block">Viac informácií</a>
+                            {{--<a href="#" class="btn btn-outline-info text-uppercase btn-block">Viac informácií</a>--}}
                         </div>
                     </div>
                 </div>

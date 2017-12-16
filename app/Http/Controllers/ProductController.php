@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Cart;
 use App\Order;
 use App\Product;
+use App\Shipping;
 use Auth;
 use Illuminate\Http\Request;
 use Session;
@@ -49,7 +50,11 @@ class ProductController extends Controller
         $oldCart = Session::get("cart");
         $cart = new Cart($oldCart);
         $total = $cart->totalPrice;
-        return view("shop.checkout", compact("oldCart", "total"));
+        $totalWeight = $cart->totalWeight;
+
+        $shippings = Shipping::all()->where("max_weight", ">", "=", $totalWeight);
+
+        return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
     }
     public function postCheckout(Request $request) {
         if (!Session::has("cart")) {
@@ -65,6 +70,8 @@ class ProductController extends Controller
         $order->psc = $request->input("psc");
         $order->name = $request->input("fname") . " " . $request->input("lname");
         $order->price = $cart->totalPrice;
+        $order->weight = $cart->totalWeight;
+        $order->shipping_type = $request->input("shipping_type");
 
         Auth::user()->orders()->save($order);
 
