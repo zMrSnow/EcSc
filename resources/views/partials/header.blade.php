@@ -34,10 +34,12 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     @if(Auth::check())
-                        <a class="dropdown-item" href="{{route("auth.profile")}}">
-                            <i class="fa fa-cog" aria-hidden="true"></i>
-                            Profil
-                        </a>
+                        @can("admin_only", Auth::user())
+                            <a class="dropdown-item" href="{{route("auth.profile")}}">
+                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                Admin Panel
+                            </a>
+                        @endcan
                         <a class="dropdown-item" href="{{route("auth.orders")}}">
                             <i class="fa fa-list" aria-hidden="true"></i>
                             Objednávky

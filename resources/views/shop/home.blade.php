@@ -110,6 +110,11 @@
                 var size;
 
 
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                    }
+                });
 
                 @forelse($products as $productsjs)
                 $("#product-{{$productsjs->id}}").click(function () {
