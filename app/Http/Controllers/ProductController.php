@@ -69,7 +69,10 @@ class ProductController extends Controller
         $order->city = $request->input("city");
         $order->psc = $request->input("psc");
         $order->name = $request->input("fname") . " " . $request->input("lname");
-        $order->price = $cart->totalPrice;
+
+        $shippingPrice = Shipping::findOrFail($request->input("shipping_type"))->price;
+
+        $order->price = $cart->totalPrice + $shippingPrice;
         $order->weight = $cart->totalWeight;
         $order->shipping_type = $request->input("shipping_type");
 

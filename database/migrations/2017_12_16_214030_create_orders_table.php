@@ -21,7 +21,7 @@ class CreateOrdersTable extends Migration
             $table->string("city");
             $table->string("psc");
             $table->string("name");
-            $table->integer("price")->unsigned();
+            $table->float("price")->unsigned();
             $table->integer("weight")->unsigned();
             $table->integer("shipping_type")->unsigned()->index();
             $table->integer("status")->default(0);
