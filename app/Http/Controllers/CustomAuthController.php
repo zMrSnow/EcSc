@@ -62,9 +62,9 @@ class CustomAuthController extends Controller
     }
 
 
-    public function profile() {
+    public function adminControlPanel() {
 
-        return view("auth.userProfile");
+        return view("auth.adminControlPanel");
     }
     public function orders() {
         $orders = Auth::user()->orders;

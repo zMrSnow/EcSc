@@ -22,19 +22,19 @@
                     <input type="text" name="lname" class="form-control">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="psc" class="form-control bg-dark text-light">PSČ:</label>
+                    <label for="psc" class="form-control bg-dark text-light"><i class="fa fa-sort-numeric-asc" aria-hidden="true"></i> PSČ:</label>
                     <input type="text" name="psc" class="form-control">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="city" class="form-control bg-dark text-light">Mesto:</label>
+                    <label for="city" class="form-control bg-dark text-light"><i class="fa fa-bank" aria-hidden="true"></i> Mesto:</label>
                     <input type="text" name="city" class="form-control">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="adress" class="form-control bg-dark text-light">Adresa:</label>
+                    <label for="adress" class="form-control bg-dark text-light"><i class="fa fa-address-book" aria-hidden="true"></i> Adresa:</label>
                     <input type="text" name="adress" class="form-control">
                 </div>
                 <div class="col-12 col-sm-6">
-                    <label for="shipping_type" class="form-control bg-dark text-light">Typ dorucenia:</label>
+                    <label for="shipping_type" class="form-control bg-dark text-light"><i class="fa fa-car" aria-hidden="true"></i> Typ dorucenia:</label>
                     <select class="form-control" name="shipping_type">
                         @forelse($shippings as $shipping)
                             <option value="{{$shipping->id}}">{{$shipping->text}} - {{$shipping->price}}€ ({{$totalWeight}}g / {{$shipping->max_weight}}g)</option>

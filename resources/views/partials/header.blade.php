@@ -6,7 +6,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item {{Nav::isRoute("product.home", "active")}}">
                 <a class="nav-link" href="{{route("product.home")}}">Domov <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
@@ -14,7 +14,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link" href="#">Link</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto navbar-right">
@@ -35,7 +35,7 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                     @if(Auth::check())
                         @can("admin_only", Auth::user())
-                            <a class="dropdown-item" href="{{route("auth.profile")}}">
+                            <a class="dropdown-item" href="{{route("auth.adminControlPanel")}}">
                                 <i class="fa fa-cog" aria-hidden="true"></i>
                                 Admin Panel
                             </a>

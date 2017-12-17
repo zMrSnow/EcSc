@@ -19,12 +19,15 @@ Route::group(["prefix" => "auth"], function () {
     });
 
     Route::group(["middleware" => "auth"], function () {
+        Route::group(["middleware" => "admin"], function () {
+            Route::get("/acp", "CustomAuthController@adminControlPanel")
+                ->name("auth.adminControlPanel");
+        });
+
         // logout
         Route::get('/logout', 'CustomAuthController@logOut')
             ->name('auth.logout');
         // Signed user only
-        Route::get("/profile", "CustomAuthController@profile")
-            ->name("auth.profile");
         Route::get("/orders", "CustomAuthController@orders")
             ->name("auth.orders");
 
