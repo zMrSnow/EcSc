@@ -4,7 +4,7 @@
 use App\Product;
 
 Route::get('/', "ProductController@home")->name("product.home");
-Route::get('/add-to-cart/{id}/{size}', "ProductController@addToCartAjax")->name("product.addToCartAjax");
+Route::post('/add-to-cart/{id}/{size}', "ProductController@addToCartAjax")->name("product.addToCartAjax");
 Route::get('/shoping-cart', "ProductController@shopingCart")->name("product.shopingCart");
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use Auth;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -57,6 +58,6 @@ class AdminOnlyPolicy
     }
 
     public function acp(User $user){
-        return $user->id == 1;
+        return $user->isAdmin();
     }
 }

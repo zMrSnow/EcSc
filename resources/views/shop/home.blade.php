@@ -3,9 +3,9 @@
 @section('content')
     <div class="row">
         @forelse($products as $product)
-            @if(count($product->sizes) <= 0)
+            @skladom($product)
                 @continue
-            @endif
+            @endskladom
             <div class="col-md-4">
                 <div class="card card-01">
                     <div id="carouselExampleControls-{{$product->id}}" class="carousel slide" data-ride="carousel">
@@ -118,6 +118,9 @@
                 });
 
                 @forelse($products as $productsjs)
+                @skladom($productsjs)
+                @continue
+                @endskladom
                 $("#product-{{$productsjs->id}}").click(function () {
                     var radios{{$productsjs->id}} = document.getElementsByName('radio-{{$productsjs->id}}');
                     for (var i = 0, length = radios{{$productsjs->id}}.length; i < length; i++) {
@@ -129,7 +132,7 @@
                         }
                     }
                     $.ajax({
-                        type: "get",
+                        type: "post",
                         url: '/add-to-cart/{{$productsjs->id}}/' + size,
                         success: function () {
                             CartCount++;
