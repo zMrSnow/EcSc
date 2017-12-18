@@ -60,6 +60,16 @@ class ProductController extends Controller
         if (!Session::has("cart")) {
             return redirect()->back();
         }
+
+        $this->validate($request, [
+            'adress'    => 'required|max:191',
+            'city' => 'required|max:30',
+            'psc' => 'required|min:4|max:6',
+            'fname' => 'required|max:30',
+            'lname' => 'required|max:30',
+        ]);
+        
+
         $oldCart = Session::get("cart");
         $cart = new Cart($oldCart);
 
