@@ -22,6 +22,10 @@ Route::group(["prefix" => "auth"], function () {
         Route::group(["middleware" => "admin"], function () {
             Route::get("/acp", "CustomAuthController@adminControlPanel")
                 ->name("auth.adminControlPanel");
+            Route::get("/acp/orders", "CustomAuthController@adminOrders")
+                ->name("auth.adminOrders");
+            Route::get("/acp/paydd-orders", "CustomAuthController@adminPaydOrders")
+                ->name("auth.adminPaydOrders");
         });
 
         // logout

@@ -68,7 +68,8 @@ class ProductController extends Controller
             'fname' => 'required|max:30',
             'lname' => 'required|max:30',
         ]);
-        
+
+
 
         $oldCart = Session::get("cart");
         $cart = new Cart($oldCart);

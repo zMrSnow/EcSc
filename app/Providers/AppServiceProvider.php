@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\User;
 use Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;

@@ -25,6 +25,7 @@ class CreateOrdersTable extends Migration
             $table->integer("weight")->unsigned();
             $table->integer("shipping_type")->unsigned()->index();
             $table->integer("status")->default(0);
+            $table->string("payment_id")->nullable();
             $table->timestamps();
 
             $table->foreign("user_id")->references("id")->on("users")->onDelete("cascade");

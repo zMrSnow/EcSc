@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Order;
+use App\Product;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
@@ -27,7 +29,7 @@ class CustomAuthController extends Controller
     {
         $this->validation($request);
         $request['password'] = bcrypt($request->password);
-        $user = User::create($request->all());
+        $user                = User::create($request->all());
         Auth::login($user);
         if (Session::has("oldUrl")) {
             $oldUrl = Session::get("oldUrl");
@@ -62,11 +64,51 @@ class CustomAuthController extends Controller
     }
 
 
-    public function adminControlPanel() {
+    public function adminControlPanel()
+    {
 
-        return view("auth.adminControlPanel");
+        $products          = Product::all();
+        $availble_products = 0;
+        foreach ($products as $product) {
+            if (count($product->sizes) > 0) {
+                $availble_products++;
+            }
+        }
+        $orders           = Order::all();
+        $completed_orders = 0;
+        $expand_order     = 0;
+        $payd_orders      = 0;
+        $unpayd_orders    = 0;
+        foreach ($orders as $order) {
+            switch ($order->status) {
+                case 0:
+                    $unpayd_orders++;
+                    break;
+                case 1:
+                    $payd_orders++;
+                    break;
+                case 2:
+                    $expand_order++;
+                    break;
+                case 3:
+                    $completed_orders++;
+                    break;
+            }
+        }
+
+        return view("auth.adminControlPanel",
+            compact("products",
+                "availble_products",
+                "orders",
+                "unpayd_orders",
+                "payd_orders",
+                "expand_order",
+                "completed_orders"
+            ));
     }
-    public function orders() {
+
+    public function orders()
+    {
         $orders = Auth::user()->orders;
         $orders->transform(function ($order, $key) {
             $order->cart = unserialize($order->cart);
@@ -74,4 +116,22 @@ class CustomAuthController extends Controller
         });
         return view("auth.userOrders", compact("orders"));
     }
+
+
+    public function adminOrders() {
+        $orders = Order::all();
+
+        return view("auth.acp.orders", compact("orders"));
+    }
+
+    public function adminPaydOrders() {
+        $orders = Order::all()->where("status", "=", "1");
+        $orders->transform(function ($order, $key) {
+            $order->cart = unserialize($order->cart);
+            return $order;
+        });
+        return view("auth.acp.paydOrders", compact("orders"));
+    }
+
+
 }

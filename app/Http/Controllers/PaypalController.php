@@ -31,7 +31,16 @@ class PaypalController extends Controller
 
     public function orderStatus()
     {
-        return 1;
+        //return Session::get("order_id");
+        //return Session::get("paypal_payment_id");
+        $order = Order::findOrFail(Session::get("order_id"));
+        Session::forget("order_id");
+        $order->status = 1;
+        $order->payment_id = Session::get("paypal_payment_id");
+        Session::forget("paypal_payment_id");
+        $order->save();
+
+        return redirect(route("auth.orders"))->with("", "Objednávka bola úspešne uhradená, expandovat budeme čo najskor.");
     }
 
     public function postPaymentWithpaypal(Request $request, $t_id)
@@ -79,14 +88,14 @@ class PaypalController extends Controller
         } catch (PayPalConnectionException $e) {
             if (\Config::get('app.debug')) {
                 Session::put('msgDanger','Spojene sa prerušilo (dlhá neaktivita).');
-                Session::put('error','Spojene sa prerušilo (dlhá neaktivita).');
+                //Session::put('error','Spojene sa prerušilo (dlhá neaktivita).');
                 return redirect(route("auth.orders"));
                 /** echo "Exception: " . $ex->getMessage() . PHP_EOL; **/
                 /** $err_data = json_decode($ex->getData(), true); **/
                 /** exit; **/
             } else {
                 Session::put('msgDanger','Nastala chyba, opakujte prosim akciu neskôr.');
-                Session::put('error','Nastala chyba, opakujte prosim akciu neskôr.');
+                //Session::put('error','Nastala chyba, opakujte prosim akciu neskôr.');
                 return redirect(route('product.home'));
                 /** die('Some error occur, sorry for inconvenient'); **/
             }
@@ -98,8 +107,10 @@ class PaypalController extends Controller
                 break;
             }
         }
-        /** add payment ID to session **/
+
+        /** add payment ID, order ID to session **/
         Session::put('paypal_payment_id', $payment->getId());
+        Session::put('order_id', $t_id);
         if(isset($redirect_url)) {
             /** redirect to paypal **/
             return Redirect::away($redirect_url);

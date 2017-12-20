@@ -102,6 +102,9 @@
                                 <span class="badge badge-success pull-right">Uhradené</span>
                                 <span class="badge badge-success pull-right">Odoslané</span>
                                 @break
+                                @case(3)
+                                <span class="badge badge-success pull-right">Prevziaté</span>
+                                @break
                             @endswitch
                         </div>
                         <div class="card-body">
