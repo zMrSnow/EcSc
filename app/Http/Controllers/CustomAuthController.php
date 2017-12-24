@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Image;
 use App\Order;
 use App\Product;
+use App\Shipping;
+use App\Sizer;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
@@ -131,6 +134,90 @@ class CustomAuthController extends Controller
             return $order;
         });
         return view("auth.acp.paydOrders", compact("orders"));
+    }
+
+    public function adminProoducts() {
+        $products = Product::all();
+        $sizers = Sizer::all();
+
+        return view("auth.acp.products", compact("products", "sizers"));
+    }
+
+    public function adminEditProduct($id) {
+        $product = Product::findOrFail($id);
+
+
+        return $product;
+    }
+
+    public function postAdminEditProduct(Request $request, $id) {
+
+        $product = Product::findOrFail($id);
+
+        $this->validate($request, [
+            "product_name" => "max:60",
+            "product_description" => "max:191",
+        ]);
+
+        $product->name = $request->input("product_name");
+        $product->description = $request->input("product_description");
+        $product->weight = $request->input("product_weight");
+        $product->price = $request->input("product_price");
+
+        $product->save();
+
+        return redirect(route("auth.adminProoducts"));
+    }
+    public function deleteAdminProduct($id) {
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->back()->with("msg","Produkt s číslom #$id - $product->name bol vymazaný.");
+    }
+
+    public function adminProductImage($id) {
+        $images = Image::all()->where("product_id", "=", "$id");
+
+        return $images;
+        //return view("acp.images", compact("images"));
+    }
+
+    public function deleteAdminOrder($id) {
+        $order = Order::findOrFail($id);
+        $order->delete();
+
+        return redirect()->back()->with("msg","Obejnávka s číslom #$id bola vymazaný.");
+    }
+
+    public function changeOrderToPayd($id) {
+        $order = Order::findOrFail($id);
+        $order->status = 1;
+        $order->save();
+
+        return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Zaplatené.");
+    }
+
+    public function changeOrderToShipped($id) {
+        $order = Order::findOrFail($id);
+        $order->status = 2;
+        $order->save();
+
+        return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Odoslané.");
+    }
+
+    public function shippingMethods() {
+        $shipping = Shipping::all();
+
+        return view("auth.acp.shippingMethods", compact("shipping"));
+    }
+    public function  addShippingMethod(Request $request) {
+
+        $shipping = new Shipping();
+        $shipping->text = $request->input("text");
+        $shipping->max_weight = $request->input("weight");
+        $shipping->price = $request->input("price");
+
+        return redirect()->back()->with("msg","Nový sposob dopravy bol úspešne pridaný.");
     }
 
 

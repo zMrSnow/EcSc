@@ -236,3 +236,24 @@
 .break span {
     margin-left: 5px;
 }
+
+.alert-flash {
+    position: absolute;
+    z-index: 999999;
+    top: 5%;
+    left: 80%;
+}
+.alert-flash span {
+    position: absolute;
+    right: 10px;
+}
+
+
+
+
+
+
+
+
+
+

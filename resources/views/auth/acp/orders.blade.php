@@ -10,7 +10,7 @@
                     <i class="fa fa-align-justify"></i> Všetky objednávky
                 </div>
                 <div class="card-body">
-                    <table class="table table-responsive-sm table-sm">
+                    <table class="table table-responsive-sm table-sm table-hover">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -31,6 +31,7 @@
                                     @switch($order->status)
                                     @case(0)
                                             badge-danger">Nezaplatené
+
                                         @break
                                         @case(1)
                                         badge-warning">Zaplaťené / Neodoslané
@@ -44,9 +45,17 @@
                                         @endswitch
                                     </span>
                                 </td>
-                                <td>
-                                    {{--<a href=""><span class="fa fa-edit text-dark"></span></a>--}}
-                                    <a href=""><span class="fa fa-trash text-danger"></span></a>
+                                <td class="row">
+                                    @if($order->status == 0)
+                                    <form action="{{route("auth.changeOrderToPayd", $order->id)}}" method="post">
+                                        {{csrf_field()}}
+                                        <button class="fa fa-check btn btn-outline-success" type="submit"></button>
+                                    </form>
+                                    @endif
+                                    <form action="{{route("auth.deleteAdminOrder", $order->id)}}" method="post">
+                                        {{csrf_field()}}
+                                        <button class="fa fa-trash btn btn-outline-danger" type="submit"></button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

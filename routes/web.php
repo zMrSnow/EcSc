@@ -26,6 +26,40 @@ Route::group(["prefix" => "auth"], function () {
                 ->name("auth.adminOrders");
             Route::get("/acp/paydd-orders", "CustomAuthController@adminPaydOrders")
                 ->name("auth.adminPaydOrders");
+            Route::get("/acp/shipping-methods", "CustomAuthController@shippingMethods")
+                ->name("admin.shippingMethods");
+
+            Route::get("/acp/products-show", "CustomAuthController@adminProoducts")
+                ->name("auth.adminProoducts");
+
+            // not yet
+            Route::get("/acp/product/edit/{id}", "CustomAuthController@adminEditProduct")
+                ->name("auth.adminEditProduct");
+            Route::post("/acp/product/edit", "CustomAuthController@postAdminEditProduct")
+                ->name("auth.postAdminEditProduct");
+            Route::post("acp/product/delete/{id}", "CustomAuthController@deleteAdminProduct")
+                ->name("auth.deleteAdminProduct");
+
+
+            Route::post("acp/order/delete/{id}", "CustomAuthController@deleteAdminOrder")
+                ->name("auth.deleteAdminOrder");
+            Route::post("acp/order/status-1/{id}", "CustomAuthController@changeOrderToPayd")
+                ->name("auth.changeOrderToPayd");
+            Route::post("acp/order/status-2/{id}", "CustomAuthController@changeOrderToShipped")
+                ->name("auth.changeOrderToShipped");
+
+            Route::post("acp/productType/add", "ProductController@addProductType")
+                ->name("admin.addProductType");
+            Route::post("acp/product/add", "ProductController@addProduct")
+                ->name("admin.addProduct");
+            Route::post("acp/product/stock/add", "ProductController@addProductStock")
+                ->name("admin.addProductStock");
+
+
+
+
+            Route::get("acp/product/image/{id}", "CustomAuthController@adminProductImage")
+                ->name("auth.adminProductImage");
         });
 
         // logout

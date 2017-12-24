@@ -1,67 +1,97 @@
+{{--<nav class="navbar navbar-expand-lg navbar-dark bg-info">
+
+    <ul class="navbar-nav mx-auto">
+
+            <li class="nav-item">
+                <h1>DEMO VERZIA - testovanie</h1>
+            </li>
+
+    </ul>
+</nav>--}}
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{route("product.home")}}">DEKOJA.sk</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item {{Nav::isRoute("product.home", "active")}}">
-                <a class="nav-link" href="{{route("product.home")}}">Domov <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
+    <ul class="navbar-nav mx-auto">
+        @if(Auth::check())
+            @can("admin_only", Auth::user())
+                <li class="nav-item">
+                    <a href="{{route("auth.adminControlPanel")}}" class="nav-link {{Nav::isRoute("auth.adminControlPanel", "active")}}"><span class="fa fa-modx"></span> Admin Panel</a>
+                </li>
+            @endcan
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a href="{{route("auth.orders")}}" class="nav-link {{Nav::isRoute("auth.orders", "active")}}"><span class="fa fa-list"></span> Objednávky</a>
             </li>
-        </ul>
-        <ul class="navbar-nav ml-auto navbar-right">
             <li class="nav-item">
-                <a class="nav-link" href="{{route("product.shopingCart")}}"><i class="fa fa-shopping-cart"
-                                                                               aria-hidden="true"></i>
-                    <span class="badge badge-secondary" id="shoppingCartCounter">
-                        {{ Session::has("cart") ? Session::get("cart")->totalQty : "0" }}
-                    </span>
-                </a>
+                <a href="{{route("auth.logout")}}" class="nav-link"><span class="fa fa-power-off"></span> Odhlásiť sa</a>
             </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                   aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    Môj účet
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    @if(Auth::check())
-                        @can("admin_only", Auth::user())
-                            <a class="dropdown-item" href="{{route("auth.adminControlPanel")}}">
-                                <i class="fa fa-cog" aria-hidden="true"></i>
-                                Admin Panel
-                            </a>
-                        @endcan
-                        <a class="dropdown-item" href="{{route("auth.orders")}}">
-                            <i class="fa fa-list" aria-hidden="true"></i>
-                            Objednávky
-                        </a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{{route("auth.logout")}}">
-                            <i class="fa fa-power-off" aria-hidden="true"></i>
-                            Odhlásiť sa
-                        </a>
-                    @else
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#loginModal">
-                            <i class="fa fa-sign-in" aria-hidden="true"></i>
-                            Prihlásiť sa
-                        </a>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#registerModal">
-                            <i class="fa fa-user-plus" aria-hidden="true"></i>
-                            Zaregistrovať sa
-                        </a>
-                    @endif
-                </div>
-            </li>
-        </ul>
-    </div>
 
+        @else
+            <li class="nav-item">
+                <a href="#" data-toggle="modal" data-target="#loginModal" class="nav-link">Prihlásiť sa</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" data-toggle="modal" data-target="#registerModal" class="nav-link">Zaregistrovať</a>
+            </li>
+        @endif
+    </ul>
 </nav>
+
+
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <!-- Navbar Header  --><a href="{{route("product.home")}}" class="navbar-brand"><img
+                    src="{{asset("img/logo.png")}}" alt="DEKOJA.SK"></a>
+        <button type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse"
+                aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right"><i
+                    class="fa fa-bars"></i></button>
+        <!-- Navbar Collapse -->
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a href="{{route("product.home")}}" class="nav-link {{Nav::isRoute("product.home", "active")}}">Domov</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" class="nav-link">Kontakt</a>
+                </li>
+            </ul>
+            <div class="right-col d-flex align-items-lg-center flex-column flex-lg-row">
+                <!-- Search Button-->
+                {{--<div class="search"><i class="icon-search fa fa-search"></i></div>--}}
+                <!-- Cart Dropdown-->
+                <div class="cart dropdown"><a id="cartdetails" href="https://example.com" data-toggle="dropdown"
+                                              aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i
+                                class="icon-cart fa fa-shopping-basket"></i>
+                        <div class="cart-no" id="shoppingCartCounter">
+                            {{ Session::has("cart") ? Session::get("cart")->totalQty : "0" }}
+                        </div>
+                    </a><a href="{{route("product.shopingCart")}}" class="text-primary view-cart">Nákupný košík</a>
+                    <div aria-labelledby="cartdetails" class="dropdown-menu">
+                        <!-- cart item-->
+                    {{--<div class="dropdown-item cart-product">
+                        <div class="d-flex align-items-center">
+                            <div class="img"><img src="https://d32d8xzgnjxuvk.cloudfront.net/hub/1-2/img/hoodie-man-1.png" alt="..." class="img-fluid"></div>
+                            <div class="details d-flex justify-content-between">
+                                <div class="text"> <a href="#"><strong>Heather Gray Hoodie</strong></a><small>Quantity: 1 </small><span class="price">$75.00 </span></div><a href="#" class="delete"><i class="fa fa-trash-o"></i></a>
+                            </div>
+                        </div>
+                    </div>--}}
+                    <!-- total price-->
+                        <div class="dropdown-item total-price d-flex justify-content-between"><span>Celková cena</span>
+                            <strong class="text-primary" id="shoppingCartTotalPrice">
+                                {{ Session::has("cart") ? Session::get("cart")->totalPrice : "0" }}€
+                            </strong></div>
+                        <!-- call to actions-->
+                        <div class="dropdown-item CTA d-flex">
+                            <a href="{{route("product.shopingCart")}}" class="btn btn-template wide">Nákupný Košík</a>
+                            <a href="{{route("product.checkout")}}" class="btn btn-template wide">Objednať</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+

@@ -42,10 +42,15 @@
                                 <li>Adressa: {{$order->adress}}</li>
                                 <li>Mesto: {{$order->city}}</li>
                                 <li>PSČ: {{$order->psc}}</li>
+                                <li>Váha balíka: {{$order->weight}}g</li>
+                                <li>Cena balíka + poštovné: {{$order->price}}€</li>
+                                <li>pladba :{!! $order->payment_id ? "<span class=\"fa fa-paypal \"></span> $order->payment_id" : "<span class=\"fa fa-bank \"></span> Na účet"!!}</li>
 
                             </ul>
-                            <a href="" class="btn btn-outline-success">Označiť ako odoslané</a>
-
+                            <form action="{{route("auth.changeOrderToShipped", $order->id)}}" method="post">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-outline-success fa fa-car"> Označit objednávku ako odoslanú</button>
+                            </form>
 
                         </div>
                         <div class="card-footer text-muted text-right">

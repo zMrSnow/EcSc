@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Image;
 use App\Order;
 use App\Product;
 use App\Shipping;
+use App\Size;
+use App\Sizer;
 use Auth;
 use Illuminate\Http\Request;
 use Session;
@@ -62,7 +65,7 @@ class ProductController extends Controller
         }
 
         $this->validate($request, [
-            'adress'    => 'required|max:191',
+            'address'    => 'required|max:191',
             'city' => 'required|max:30',
             'psc' => 'required|min:4|max:6',
             'fname' => 'required|max:30',
@@ -76,7 +79,7 @@ class ProductController extends Controller
 
         $order = new Order();
         $order->cart = serialize($cart);
-        $order->adress = $request->input("adress");
+        $order->adress = $request->input("address");
         $order->city = $request->input("city");
         $order->psc = $request->input("psc");
         $order->name = $request->input("fname") . " " . $request->input("lname");
@@ -91,5 +94,48 @@ class ProductController extends Controller
 
         Session::forget("cart");
         return redirect()->route("auth.orders")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
+    }
+
+    public function addProductType(Request $request) {
+        $this->validate($request, [
+            "name" => ""
+        ]);
+        $sizer = new Sizer();
+        $sizer->name = $request->input("name");
+        $sizer->save();
+        return redirect()->back()->with("msg","Typ produktu s názvom $sizer->name bol vytvorený.");
+    }
+
+    public function addProduct(Request $request) {
+        $this->validate($request, [
+           "name" => ""
+        ]);
+        $product = new Product();
+        $product->name = $request->input("name");
+        $product->description = $request->input("description");
+        $product->weight = $request->input("weight");
+        $product->price = $request->input("price");
+        $product->save();
+
+        $image = new Image();
+        $image->product_id = $product->id;
+        $image->img = $request->input("img");
+        $image->save();
+
+        return redirect()->back()->with("msg","Produkt s názvom $product->name bol vytvorený.");
+    }
+
+    public function addProductStock(Request $request) {
+        $this->validate($request, [
+            "product" => ""
+        ]);
+
+        $sizer = new Size();
+        $sizer->product_id = $request->input("product");
+        $sizer->sizer_id = $request->input("size");
+        $sizer->quantities = $request->input("qty");
+        $sizer->save();
+
+        return redirect()->back()->with("msg","Bolo pridane množstvo do skladu.");
     }
 }

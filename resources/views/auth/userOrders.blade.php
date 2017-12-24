@@ -1,11 +1,25 @@
 @extends('layouts.master')
 
 @section('content')
-    <h1>Moje objednávky</h1>
+    <section class="hero hero-page padding-small">
+        <div class="container-">
+            <div class="row d-flex">
+                <div class="col-lg-9 order-2 order-lg-1">
+                    <h1>Moje objednávky</h1><p class="lead text-muted">tu sledujete stav objednavok a pladby za objednavky</p>
+                </div>
+                <div class="col-lg-3 text-right order-1 order-lg-2">
+                    <ul class="breadcrumb justify-content-lg-end">
+                        <li class="breadcrumb-item"><a href="{{route("product.home")}}">Domov</a></li>
+                        <li class="breadcrumb-item active">Objednávky</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
 
     <p class="text-center">
-        <a class="btn btn-outline-danger" data-toggle="collapse" href="#neuhradene" aria-expanded="false"
+        <a class="btn btn-outline-danger active" data-toggle="collapse" href="#neuhradene" aria-expanded="true"
            aria-controls="collapseExample">
             Neuhradené
         </a>
@@ -14,8 +28,8 @@
             Uhradené
         </a>
     </p>
-    <div class="collapse" id="neuhradene">
-        <div class="card card-body ">
+    <div class="collapse show" id="neuhradene">
+        <div class="card card-body">
 
             @forelse($orders as $order)
                 @if($order->status == 0)
@@ -68,17 +82,22 @@
                             Celkova suma: € {{$order->price}}
                             @if($order->status == 0)
                                 <form action="{{route("paypal.pay", $order->id)}}" method="post">
-                                    <button type="submit" class="btn btn-danger pull-left">
-                                        PayPall
+                                    <button type="submit" class="btn btn-outline-info pull-left">
+                                        <span class="fa fa-paypal"></span> PayPal - SandBox
                                     </button>
+                                    <a href="#" class="btn btn-outline-info pull-left">
+                                       <span class="fa fa-bank"></span> Prevodom na účet
+                                    </a>
                                     {{ csrf_field() }}
                                 </form>
+
                             @endif
                         </div>
                     </div>
                     <hr>
                 @endif
             @empty
+                <p>Nemate ešte žiadnu objednávku</p>
             @endforelse
 
         </div>
@@ -142,6 +161,7 @@
                     <hr>
                 @endif
             @empty
+                <p>Nemate ešte žiadnu uhradenú objednávku</p>
             @endforelse
         </div>
     </div>

@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
         Session::put("oldUrl", $request->url());
-        return redirect()->route('product.home')->with("msgDanger", "Pre objednanie produktov musísš byt prihlásený. ( Môj účet -> Prihlásiť sa )");
+        return redirect()->route('product.home')->with("msgDanger", "Pre objednanie produktov musísš byt prihlásený.");
     }
 
 }
