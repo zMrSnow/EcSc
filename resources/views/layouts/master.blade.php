@@ -46,7 +46,7 @@
         <div class="container">
             <div class="row d-flex align-items-center">
                 <div class="text col-md-6">
-                    <p>© 2017 <a href="" target="_blank"></a> All rights reserved.</p>
+                    <p>© 2017, <a href="" target="_blank"></a> Vytvoril <a href="https://snowfox.sk" target="_blank"><b>SnowFox.sk</b></a> </p>
                 </div>
                 <div class="payment col-md-6 clearfix">
                     <ul class="payment-list list-inline-item pull-right">

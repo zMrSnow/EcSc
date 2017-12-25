@@ -11,11 +11,14 @@
         </div>
 
         <p>
-            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseBank" aria-expanded="false" aria-controls="collapseExample">
                 Bankový účet
             </a>
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapsePP" aria-expanded="false" aria-controls="collapseExample">
+                PayPal
+            </a>
         </p>
-        <div class="collapse" id="collapseExample">
+        <div class="collapse" id="collapseBank">
             <div class="card card-body">
                 <form action="{{route("auth.setBankAccountNumber")}}" method="post">
                 {{ csrf_field() }}
@@ -24,6 +27,33 @@
                         <div class="form-group col-md-12">
                             <label for="value" class="form-label">Číslo účtu, ktoré sa bude zobrazovat pri uhrade na účet</label>
                             <input id="value" type="text" name="value" value="{{$b_account->iban}}" placeholder="SKkk bbbb rrrr rruu uuuu uuuu" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="CTAs d-flex justify-content-between flex-column flex-lg-row">
+                            <button class="btn btn-template wide next" type="submit">
+                                Aktualizovať
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="collapse" id="collapsePP">
+            <div class="card card-body">
+                <form action="" method="post">
+                {{ csrf_field() }}
+                <!-- Invoice Address-->
+                    <div class="row">
+                        <a href="https://developer.paypal.com/" target="_blank" class="mx-3">Developer PayPal</a>
+                        <div class="form-group col-md-12">
+                            <label for="value" class="form-label">PayPal ID</label>
+                            <input id="value" type="text" name="paypal_id" value="" placeholder="" class="form-control">
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="value" class="form-label">PayPal SECRET</label>
+                            <input id="value" type="text" name="paypal_secret" value="" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">
