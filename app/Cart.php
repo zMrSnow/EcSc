@@ -70,4 +70,21 @@ class Cart
         $this->totalPrice += $item->price;
         $this->totalWeight += $item->weight;
     }
+
+    public function reduceByOne($id) {
+        $this->items[$id]["qty"]--;
+        $this->items[$id]["price"] -= $this->items[$id]["item"]["price"];
+        $this->totalQty--;
+        $this->totalPrice -= $this->items[$id]["item"]["price"];
+        $this->totalWeight -= $this->items[$id]["item"]["weight"];
+        if ($this->items[$id]["qty"] <= 0) {
+            unset($this->items[$id]);
+        }
+    }
+
+    public function reducebyItem($id) {
+        $this->totalQty -= $this->items[$id]["qty"];
+        $this->totalPrice -= $this->items[$id]["price"];
+        unset($this->items[$id]);
+    }
 }

@@ -67,7 +67,7 @@ class CustomAuthController extends Controller
     }
 
 
-    public function adminControlPanel()
+    public function getAdminControlPanel()
     {
 
         $products          = Product::all();
@@ -121,13 +121,13 @@ class CustomAuthController extends Controller
     }
 
 
-    public function adminOrders() {
+    public function getAdminOrders() {
         $orders = Order::all();
 
         return view("auth.acp.orders", compact("orders"));
     }
 
-    public function adminPaydOrders() {
+    public function getAdminPaydOrders() {
         $orders = Order::all()->where("status", "=", "1");
         $orders->transform(function ($order, $key) {
             $order->cart = unserialize($order->cart);
@@ -136,14 +136,14 @@ class CustomAuthController extends Controller
         return view("auth.acp.paydOrders", compact("orders"));
     }
 
-    public function adminProoducts() {
+    public function getAdminProoducts() {
         $products = Product::all();
         $sizers = Sizer::all();
 
         return view("auth.acp.products", compact("products", "sizers"));
     }
 
-    public function adminEditProduct($id) {
+    public function getAdminEditProduct($id) {
         $product = Product::findOrFail($id);
 
 
@@ -168,28 +168,28 @@ class CustomAuthController extends Controller
 
         return redirect(route("auth.adminProoducts"));
     }
-    public function deleteAdminProduct($id) {
+    public function postAdminDeleteProduct($id) {
         $product = Product::findOrFail($id);
         $product->delete();
 
         return redirect()->back()->with("msg","Produkt s číslom #$id - $product->name bol vymazaný.");
     }
 
-    public function adminProductImage($id) {
+    public function getAdminProductImages($id) {
         $images = Image::all()->where("product_id", "=", "$id");
 
         return $images;
         //return view("acp.images", compact("images"));
     }
 
-    public function deleteAdminOrder($id) {
+    public function postAdminDeleteOrder($id) {
         $order = Order::findOrFail($id);
         $order->delete();
 
         return redirect()->back()->with("msg","Obejnávka s číslom #$id bola vymazaný.");
     }
 
-    public function changeOrderToPayd($id) {
+    public function postAdminChangeOrderToPayd($id) {
         $order = Order::findOrFail($id);
         $order->status = 1;
         $order->save();
@@ -197,7 +197,7 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Zaplatené.");
     }
 
-    public function changeOrderToShipped($id) {
+    public function postAdminChangeOrderToShipped($id) {
         $order = Order::findOrFail($id);
         $order->status = 2;
         $order->save();

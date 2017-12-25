@@ -3,10 +3,10 @@
 
 use App\Product;
 
-Route::get('/', "ProductController@home")->name("product.home");
-Route::post('/add-to-cart/{id}/{size}', "ProductController@addToCartAjax")->name("product.addToCartAjax");
-Route::get('/shoping-cart', "ProductController@shopingCart")->name("product.shopingCart");
-
+Route::get('/', "ProductController@getHome")->name("product.home");
+Route::post('/add-to-cart/{id}/{size}', "ProductController@postAjaxAddToCart")->name("product.addToCartAjax");
+Route::get('/shoping-cart', "ProductController@getShopingCart")->name("product.shopingCart");
+Route::get('/shoping-cart/reduce-item/{id}', "ProductController@getReduceByItems")->name("product.reduceByItemCart");
 
 Route::group(["prefix" => "auth"], function () {
     Route::group(["middleware" => "guest"], function () {
@@ -20,46 +20,45 @@ Route::group(["prefix" => "auth"], function () {
 
     Route::group(["middleware" => "auth"], function () {
         Route::group(["middleware" => "admin"], function () {
-            Route::get("/acp", "CustomAuthController@adminControlPanel")
+            // GET - CustomAuthController
+            Route::get("/acp", "CustomAuthController@getAdminControlPanel")
                 ->name("auth.adminControlPanel");
-            Route::get("/acp/orders", "CustomAuthController@adminOrders")
+            Route::get("/acp/orders", "CustomAuthController@getAdminOrders")
                 ->name("auth.adminOrders");
-            Route::get("/acp/paydd-orders", "CustomAuthController@adminPaydOrders")
+            Route::get("/acp/paydd-orders", "CustomAuthController@getAdminPaydOrders")
                 ->name("auth.adminPaydOrders");
-            Route::get("/acp/shipping-methods", "CustomAuthController@shippingMethods")
+            Route::get("/acp/shipping-methods", "CustomAuthController@getShippingMethods")
                 ->name("admin.shippingMethods");
-
-            Route::get("/acp/products-show", "CustomAuthController@adminProoducts")
+            Route::get("/acp/products-show", "CustomAuthController@getAdminProoducts")
                 ->name("auth.adminProoducts");
+            Route::get("acp/product/image/{id}", "CustomAuthController@getAdminProductImages")
+                ->name("auth.adminProductImage");
 
-            // not yet
-            Route::get("/acp/product/edit/{id}", "CustomAuthController@adminEditProduct")
+            // POST - CustomAuthController
+            Route::post("acp/product/delete/{id}", "CustomAuthController@postAdminDeleteProduct")
+                ->name("auth.deleteAdminProduct");
+            Route::post("acp/order/delete/{id}", "CustomAuthController@postAdminDeleteOrder")
+                ->name("auth.deleteAdminOrder");
+            Route::post("acp/order/status-1/{id}", "CustomAuthController@postAdminChangeOrderToPayd")
+                ->name("auth.changeOrderToPayd");
+            Route::post("acp/order/status-2/{id}", "CustomAuthController@postAdminChangeOrderToShipped")
+                ->name("auth.changeOrderToShipped");
+
+            // POST - ProductController
+            Route::post("acp/productType/add", "ProductController@postAdminAddProductType")
+                ->name("admin.addProductType");
+            Route::post("acp/product/add", "ProductController@postAdminAddProduct")
+                ->name("admin.addProduct");
+            Route::post("acp/product/stock/add", "ProductController@postAdminAddProductStock")
+                ->name("admin.addProductStock");
+            Route::post("acp/shipping/add", "ProductController@postAdminAddShippingOption")
+                ->name("admin.addShippingOption");
+
+            // not yet done
+            Route::get("/acp/product/edit/{id}", "CustomAuthController@getAdminEditProduct")
                 ->name("auth.adminEditProduct");
             Route::post("/acp/product/edit", "CustomAuthController@postAdminEditProduct")
                 ->name("auth.postAdminEditProduct");
-            Route::post("acp/product/delete/{id}", "CustomAuthController@deleteAdminProduct")
-                ->name("auth.deleteAdminProduct");
-
-
-            Route::post("acp/order/delete/{id}", "CustomAuthController@deleteAdminOrder")
-                ->name("auth.deleteAdminOrder");
-            Route::post("acp/order/status-1/{id}", "CustomAuthController@changeOrderToPayd")
-                ->name("auth.changeOrderToPayd");
-            Route::post("acp/order/status-2/{id}", "CustomAuthController@changeOrderToShipped")
-                ->name("auth.changeOrderToShipped");
-
-            Route::post("acp/productType/add", "ProductController@addProductType")
-                ->name("admin.addProductType");
-            Route::post("acp/product/add", "ProductController@addProduct")
-                ->name("admin.addProduct");
-            Route::post("acp/product/stock/add", "ProductController@addProductStock")
-                ->name("admin.addProductStock");
-
-
-
-
-            Route::get("acp/product/image/{id}", "CustomAuthController@adminProductImage")
-                ->name("auth.adminProductImage");
         });
 
         // logout
@@ -78,7 +77,6 @@ Route::group(["prefix" => "auth"], function () {
             ->name("paypal.pay");
 
         // checkout
-
         Route::get('/checkout', "ProductController@checkout")
             ->name("product.checkout");
         Route::post('/checkout', "ProductController@postCheckout")

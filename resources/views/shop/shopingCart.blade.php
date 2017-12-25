@@ -58,9 +58,13 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-2"><span>€{{$product["item"]["price"] * $product["qty"]}}.00</span></div>
+                                        <div class="col-2">
+                                            <span>€{{$product["item"]["price"] * $product["qty"]}}.00</span>
+                                        </div>
                                         <div class="col-1 text-center">
-                                            <i class="delete fa fa-trash"></i>
+                                            <a href="{{route("product.reduceByItemCart", $product["item"]["id"])}}">
+                                                <i class="delete fa fa-trash"></i>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>

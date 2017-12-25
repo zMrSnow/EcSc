@@ -10,19 +10,21 @@ use App\Shipping;
 use App\Size;
 use App\Sizer;
 use Auth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Mockery\Exception;
 use Session;
 
 class ProductController extends Controller
 {
 
-    public function home()
+    public function getHome()
     {
         $products = Product::all();
         return view('shop.home', compact("products"));
     }
 
-    public function addToCartAjax(Request $request, $id, $size)
+    public function postAjaxAddToCart(Request $request, $id, $size)
     {
         $product = Product::findOrFail($id);
         $oldCart = Session::has("cart") ? Session::get("cart") : null;
@@ -32,7 +34,9 @@ class ProductController extends Controller
         $request->session()->put("cart", $cart);
     }
 
-    public function shopingCart()
+
+
+    public function getShopingCart()
     {
         if (!Session::has("cart")) {
             return view("shop.shopingCart");
@@ -44,6 +48,24 @@ class ProductController extends Controller
         //return $products;
         return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
 
+    }
+
+    public function getReduceByOneItem($id) {
+        $oldCart = Session::has("cart") ? Session::get("cart") : null;
+        $cart    = new Cart($oldCart);
+        $cart->reduceByOne($id);
+
+        Session::put("cart", $cart);
+        return redirect()->back()->with("msg","Produkt bol odobraný.");
+    }
+
+    public function getReduceByItems($id) {
+        $oldCart = Session::has("cart") ? Session::get("cart") : null;
+        $cart    = new Cart($oldCart);
+        $cart->reducebyItem($id);
+
+        Session::put("cart", $cart);
+        return redirect()->back()->with("msg","Produkt bol úspešne odobraný z vašeho nákupného košíka.");
     }
 
     public function checkout() {
@@ -96,7 +118,7 @@ class ProductController extends Controller
         return redirect()->route("auth.orders")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
     }
 
-    public function addProductType(Request $request) {
+    public function postAdminAddProductType(Request $request) {
         $this->validate($request, [
             "name" => ""
         ]);
@@ -106,7 +128,7 @@ class ProductController extends Controller
         return redirect()->back()->with("msg","Typ produktu s názvom $sizer->name bol vytvorený.");
     }
 
-    public function addProduct(Request $request) {
+    public function postAdminAddProduct(Request $request) {
         $this->validate($request, [
            "name" => ""
         ]);
@@ -125,17 +147,42 @@ class ProductController extends Controller
         return redirect()->back()->with("msg","Produkt s názvom $product->name bol vytvorený.");
     }
 
-    public function addProductStock(Request $request) {
+    public function postAdminAddProductStock(Request $request) {
         $this->validate($request, [
             "product" => ""
         ]);
 
-        $sizer = new Size();
-        $sizer->product_id = $request->input("product");
-        $sizer->sizer_id = $request->input("size");
-        $sizer->quantities = $request->input("qty");
-        $sizer->save();
+        try {
+            $size = Size::where("product_id", "=", $request->input("product"))
+                ->where("sizer_id", "=", $request->input("size"))
+                ->firstOrFail();
+
+            $size->quantities += $request->input("qty");
+        } catch (ModelNotFoundException $e) {
+            $size = new Size();
+            $size->product_id = $request->input("product");
+            $size->sizer_id = $request->input("size");
+            $size->quantities = $request->input("qty");
+        }
+
+        $size->save();
 
         return redirect()->back()->with("msg","Bolo pridane množstvo do skladu.");
+    }
+
+    public function postAdminAddShippingOption(Request $request) {
+        $this->validate($request, [
+            "name" => "require",
+            "weight" => "require",
+            "price" => "require"
+        ]);
+
+        $shipping = new Shipping();
+        $shipping->text = $request->input("name");
+        $shipping->max_weight = $request->input("weight");
+        $shipping->price = $request->input("price");
+        $shipping->save();
+
+        return redirect()->back()->with("msg","Bola pridaná dalšia možnosť dopravy");
     }
 }

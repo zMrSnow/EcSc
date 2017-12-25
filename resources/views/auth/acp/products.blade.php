@@ -9,8 +9,8 @@
                     <i class="fa fa-align-justify"></i> Všetky produkty
                 </div>
                 <div class="row col-12 mx-auto">
-                    <a href="{{route("admin.addProductType")}}" class="btn btn-outline-primary mt-1 col-md-6" data-toggle="modal" data-target="#addSize"><span class="fa fa-plus"></span> 1. Pridať typ Veľkosti</a>
-                    <a href="{{route("admin.addProduct")}}" class="btn btn-outline-primary mt-1 col-md-6" data-toggle="modal" data-target="#addProduct"><span class="fa fa-plus"></span> 2. Pridať produkt</a>
+                    <a href="" class="btn btn-outline-primary mt-1 col-md-6" data-toggle="modal" data-target="#addSize"><span class="fa fa-plus"></span> 1. Pridať typ Veľkosti</a>
+                    <a href="" class="btn btn-outline-primary mt-1 col-md-6" data-toggle="modal" data-target="#addProduct"><span class="fa fa-plus"></span> 2. Pridať produkt</a>
                 </div>
                 <a href="" class="btn btn-outline-primary mt-1 col-md-12" data-toggle="modal" data-target="#addStock"><span class="fa fa-plus"></span> 3. Naskladovať produkt</a>
                 <div class="card-body">
