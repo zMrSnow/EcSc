@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Image;
+use App\Info;
 use App\Order;
 use App\Product;
 use App\Shipping;
@@ -117,7 +118,8 @@ class CustomAuthController extends Controller
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        return view("auth.userOrders", compact("orders"));
+        $info = Info::findOrFail(1);
+        return view("auth.userOrders", compact("orders", "info"));
     }
 
 
@@ -205,7 +207,7 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Odoslané.");
     }
 
-    public function shippingMethods() {
+    public function getShippingMethods() {
         $shipping = Shipping::all();
 
         return view("auth.acp.shippingMethods", compact("shipping"));

@@ -15,15 +15,19 @@
         @if(Auth::check())
             @can("admin_only", Auth::user())
                 <li class="nav-item">
-                    <a href="{{route("auth.adminControlPanel")}}" class="nav-link {{Nav::isRoute("auth.adminControlPanel", "active")}}"><span class="fa fa-modx"></span> Admin Panel</a>
+                    <a href="{{route("auth.adminControlPanel")}}"
+                       class="nav-link {{Nav::isRoute("auth.adminControlPanel", "active")}}"><span
+                                class="fa fa-modx"></span> Admin Panel</a>
                 </li>
             @endcan
 
             <li class="nav-item">
-                <a href="{{route("auth.orders")}}" class="nav-link {{Nav::isRoute("auth.orders", "active")}}"><span class="fa fa-list"></span> Objednávky</a>
+                <a href="{{route("auth.orders")}}" class="nav-link {{Nav::isRoute("auth.orders", "active")}}"><span
+                            class="fa fa-list"></span> Objednávky</a>
             </li>
             <li class="nav-item">
-                <a href="{{route("auth.logout")}}" class="nav-link"><span class="fa fa-power-off"></span> Odhlásiť sa</a>
+                <a href="{{route("auth.logout")}}" class="nav-link"><span class="fa fa-power-off"></span> Odhlásiť
+                    sa</a>
             </li>
 
         @else
@@ -36,7 +40,6 @@
         @endif
     </ul>
 </nav>
-
 
 
 <nav class="navbar navbar-expand-lg">
@@ -58,8 +61,8 @@
             </ul>
             <div class="right-col d-flex align-items-lg-center flex-column flex-lg-row">
                 <!-- Search Button-->
-                {{--<div class="search"><i class="icon-search fa fa-search"></i></div>--}}
-                <!-- Cart Dropdown-->
+            {{--<div class="search"><i class="icon-search fa fa-search"></i></div>--}}
+            <!-- Cart Dropdown-->
                 <div class="cart dropdown"><a id="cartdetails" href="https://example.com" data-toggle="dropdown"
                                               aria-haspopup="true" aria-expanded="false" class="dropdown-toggle"><i
                                 class="icon-cart fa fa-shopping-basket"></i>
@@ -69,16 +72,36 @@
                     </a><a href="{{route("product.shopingCart")}}" class="text-primary view-cart">Nákupný košík</a>
                     <div aria-labelledby="cartdetails" class="dropdown-menu">
                         <!-- cart item-->
-                    {{--<div class="dropdown-item cart-product">
-                        <div class="d-flex align-items-center">
-                            <div class="img"><img src="https://d32d8xzgnjxuvk.cloudfront.net/hub/1-2/img/hoodie-man-1.png" alt="..." class="img-fluid"></div>
-                            <div class="details d-flex justify-content-between">
-                                <div class="text"> <a href="#"><strong>Heather Gray Hoodie</strong></a><small>Quantity: 1 </small><span class="price">$75.00 </span></div><a href="#" class="delete"><i class="fa fa-trash-o"></i></a>
-                            </div>
-                        </div>
-                    </div>--}}
+                    @if(Session::has("cart"))
+                            @php
+                                $sessionCart = Session::get("cart")->items;
+                            @endphp
+                        @forelse($sessionCart as $product)
+                                <div class="dropdown-item cart-product">
+                                    <div class="d-flex align-items-center">
+                                        <div class="img">
+                                            @foreach($product["item"]->images as $image)
+                                                <img src="{{$image->img}}" alt="..." class="img-fluid">
+                                                @break
+                                            @endforeach
+                                        </div>
+                                        <div class="details d-flex justify-content-between">
+                                            <div class="text">
+                                                <a href="#"><strong></strong></a>
+                                                <small>Veľkost/i: {{$product["info"]}} </small>
+                                                <span class="price">€{{$product["item"]["price"]}}.00 </span>
+                                            </div>
+                                            <a href="{{route("product.reduceByItemCart", $product["item"]["id"])}}" class="delete">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                        @empty
+                        @endforelse
+                    @endif
                     <!-- total price-->
-                        <div class="dropdown-item total-price d-flex justify-content-between"><span>Celková cena</span>
+                        <div class="dropdown-item total-price d-flex justify-content-between"><span>Celková suma</span>
                             <strong class="text-primary" id="shoppingCartTotalPrice">
                                 {{ Session::has("cart") ? Session::get("cart")->totalPrice : "0" }}€
                             </strong></div>

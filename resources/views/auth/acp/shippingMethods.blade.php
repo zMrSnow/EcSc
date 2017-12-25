@@ -90,7 +90,7 @@
                             <div class="CTAs d-flex justify-content-between flex-column flex-lg-row">
 
                                 <button class="btn btn-template wide next" type="submit">
-                                    Pridať produkt
+                                    Pridať možnosť
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>

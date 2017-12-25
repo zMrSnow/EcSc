@@ -85,12 +85,11 @@
                                     <button type="submit" class="btn btn-outline-info pull-left">
                                         <span class="fa fa-paypal"></span> PayPal - SandBox
                                     </button>
-                                    <a href="#" class="btn btn-outline-info pull-left">
+                                    <a href="#" class="btn btn-outline-info pull-left" data-toggle="modal" data-target="#bankPayment">
                                        <span class="fa fa-bank"></span> Prevodom na účet
                                     </a>
                                     {{ csrf_field() }}
                                 </form>
-
                             @endif
                         </div>
                     </div>
@@ -169,4 +168,31 @@
     <ul>
 
     </ul>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bankPayment" tabindex="-1" role="dialog" aria-labelledby="addProduct" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Pladba na účet</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group col-md-6">
+                        <label for="price" class="form-label">Číslo účtu</label>
+                        <kbd>
+                            {{$info->value}}
+                        </kbd>
+                        <br>
+                        <label for="price" class="form-label">Informácia pre príjemcu</label>
+                        <kbd>
+                            Dekoja.sk - Číslo vašej objednávky
+                        </kbd>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -64,7 +64,12 @@ class ProductController extends Controller
         $cart    = new Cart($oldCart);
         $cart->reducebyItem($id);
 
-        Session::put("cart", $cart);
+        if (count($cart->items) > 0) {
+            Session::put("cart", $cart);
+        } else {
+            Session::forget("cart");
+        }
+
         return redirect()->back()->with("msg","Produkt bol úspešne odobraný z vašeho nákupného košíka.");
     }
 

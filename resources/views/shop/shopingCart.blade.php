@@ -45,7 +45,7 @@
                                                     @break
                                                 @endforeach
                                                 <div class="title"><a href="detail.html">
-                                                        <h5>{{$product["item"]["name"]}}t</h5><span class="text-muted">Veľkosti: {{$product["info"]}}</span></a></div>
+                                                        <h5>{{$product["item"]["name"]}}</h5><span class="text-muted">Veľkosti: {{$product["info"]}}</span></a></div>
                                             </div>
                                         </div>
                                         <div class="col-2"><span>€{{$product["item"]["price"]}}.00</span></div>

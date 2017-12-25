@@ -17,7 +17,6 @@
                     <div class="product is-gray">
                         <div class="image d-flex align-items-center justify-content-center">
                             <div class="ribbon ribbon-primary text-uppercase">#{{$product->id}}</div>
-
                             @forelse($product->images as $image)
                                 <img src="{{$image->img}}" alt="product" class="img-fluid">
                                 @break
@@ -25,7 +24,9 @@
                             @endforelse
                             <div class="hover-overlay d-flex align-items-center justify-content-center">
                                 <div class="CTA d-flex align-items-center justify-content-center">
-                                    <a href="#" class="add-to-cart" id="product-{{$product->id}}"><i class="fa fa-shopping-cart"></i></a>
+                                    <a href="#" class="add-to-cart" id="product-{{$product->id}}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
                                     {{--<a href="" class="visit-product active">
                                         <i class="icon-search"></i>
                                         Viac Info

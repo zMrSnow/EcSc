@@ -168,7 +168,7 @@
                             <div class="CTAs d-flex justify-content-between flex-column flex-lg-row">
 
                                 <button class="btn btn-template wide next" type="submit">
-                                    Pridať produkt
+                                    Pridať typ / veľkosť
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
@@ -221,7 +221,7 @@
                             <div class="CTAs d-flex justify-content-between flex-column flex-lg-row">
 
                                 <button class="btn btn-template wide next" type="submit">
-                                    Pridať produkt
+                                    Naskladovať produkt
                                     <i class="fa fa-plus"></i>
                                 </button>
                             </div>
