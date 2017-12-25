@@ -120,7 +120,7 @@ class ProductController extends Controller
 
     public function postAdminAddProductType(Request $request) {
         $this->validate($request, [
-            "name" => ""
+            "name" => "required|unique:sizers"
         ]);
         $sizer = new Sizer();
         $sizer->name = $request->input("name");
@@ -130,7 +130,10 @@ class ProductController extends Controller
 
     public function postAdminAddProduct(Request $request) {
         $this->validate($request, [
-           "name" => ""
+           "name" => "required|max:191",
+            "description" => "required",
+            "weight" => "required",
+            "img" => "required"
         ]);
         $product = new Product();
         $product->name = $request->input("name");
@@ -172,9 +175,9 @@ class ProductController extends Controller
 
     public function postAdminAddShippingOption(Request $request) {
         $this->validate($request, [
-            "name" => "require",
-            "weight" => "require",
-            "price" => "require"
+            "name" => "required",
+            "weight" => "required",
+            "price" => "required"
         ]);
 
         $shipping = new Shipping();
