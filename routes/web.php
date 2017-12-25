@@ -43,6 +43,8 @@ Route::group(["prefix" => "auth"], function () {
                 ->name("auth.changeOrderToPayd");
             Route::post("acp/order/status-2/{id}", "CustomAuthController@postAdminChangeOrderToShipped")
                 ->name("auth.changeOrderToShipped");
+            Route::post("acp/infos/set-bankNumber/", "CustomAuthController@postAdminSetBankAccountNumber")
+                ->name("auth.setBankAccountNumber");
 
             // POST - ProductController
             Route::post("acp/productType/add", "ProductController@postAdminAddProductType")

@@ -9,6 +9,36 @@
                 </div>
             </div>
         </div>
+
+        <p>
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Bankový účet
+            </a>
+        </p>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                <form action="{{route("auth.setBankAccountNumber")}}" method="post">
+                {{ csrf_field() }}
+                <!-- Invoice Address-->
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="value" class="form-label">Číslo účtu, ktoré sa bude zobrazovat pri uhrade na účet</label>
+                            <input id="value" type="text" name="value" value="{{$b_account->iban}}" placeholder="SKkk bbbb rrrr rruu uuuu uuuu" class="form-control">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="CTAs d-flex justify-content-between flex-column flex-lg-row">
+                            <button class="btn btn-template wide next" type="submit">
+                                Aktualizovať
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
     </section>
 
     <div class="row">
@@ -91,18 +121,33 @@
         </div>
         <!--/.col-->
 
-            <div class="col-sm-6 col-lg-3">
-                <div class="card">
-                    <div class="card-body p-0 clearfix">
-                        <a href="{{ route("admin.shippingMethods") }}" style="color: black">
-                            <i class="fa fa-car alert-dark p-4 px-5 font-2xl mr-3 float-left"></i>
-                        </a>
-                        <div class="h5 mb-0 pt-3 text-center"></div>
-                        <div class="text-muted text-uppercase font-weight-bold font-xs text-center">Poštovné</div>
-                    </div>
+        <div class="col-sm-6 col-lg-3">
+            <div class="card">
+                <div class="card-body p-0 clearfix">
+                    <a href="" style="color: black">
+                        <i class="fa fa-list alert-secondary p-4 px-5 font-2xl mr-3 float-left"></i>
+                    </a>
+                    <div class="h5 mb-0 pt-3 text-center">{{$storage}}</div>
+                    <div class="text-muted text-uppercase font-weight-bold font-xs text-center">Sklad</div>
                 </div>
             </div>
-            <!--/.col-->
+        </div>
+        <!--/.col-->
+
+        <div class="col-sm-6 col-lg-3 {{ $shipping == 0 ? "alert-danger" : "" }}">
+            <div class="card">
+                <div class="card-body p-0 clearfix">
+                    <a href="{{ route("admin.shippingMethods") }}" style="color: black">
+                        <i class="fa fa-car alert-dark p-4 px-5 font-2xl mr-3 float-left"></i>
+                    </a>
+                    <div class="h5 mb-0 pt-3 text-center">{{$shipping}}</div>
+                    <div class="text-muted text-uppercase font-weight-bold font-xs text-center">Poštovné</div>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+
+
 
 
     </div>

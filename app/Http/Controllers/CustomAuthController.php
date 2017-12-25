@@ -7,10 +7,13 @@ use App\Info;
 use App\Order;
 use App\Product;
 use App\Shipping;
+use App\Size;
 use App\Sizer;
 use Auth;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 use Session;
 
 class CustomAuthController extends Controller
@@ -31,10 +34,21 @@ class CustomAuthController extends Controller
 
     public function postRegister(Request $request)
     {
-        $this->validation($request);
-        $request['password'] = bcrypt($request->password);
-        $user                = User::create($request->all());
-        Auth::login($user);
+        try {
+            DB::beginTransaction();
+
+            $this->validation($request);
+
+            $request['password'] = bcrypt($request->password);
+            $user                = User::create($request->all());
+            Auth::login($user);
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect("/")->with("msg", "Nastala chyba skús to nesôr.");
+        }
+
         if (Session::has("oldUrl")) {
             $oldUrl = Session::get("oldUrl");
             Session::forget("oldUrl");
@@ -72,6 +86,7 @@ class CustomAuthController extends Controller
     {
 
         $products          = Product::all();
+        $b_account         = Info::find(1);
         $availble_products = 0;
         foreach ($products as $product) {
             if (count($product->sizes) > 0) {
@@ -83,6 +98,8 @@ class CustomAuthController extends Controller
         $expand_order     = 0;
         $payd_orders      = 0;
         $unpayd_orders    = 0;
+        $storage          = 0;
+        $shipping         = count(Shipping::all());
         foreach ($orders as $order) {
             switch ($order->status) {
                 case 0:
@@ -99,6 +116,10 @@ class CustomAuthController extends Controller
                     break;
             }
         }
+        foreach (Size::all() as $item) {
+            $storage += $item->quantities;
+        }
+
 
         return view("auth.adminControlPanel",
             compact("products",
@@ -107,7 +128,10 @@ class CustomAuthController extends Controller
                 "unpayd_orders",
                 "payd_orders",
                 "expand_order",
-                "completed_orders"
+                "completed_orders",
+                "storage",
+                "shipping",
+                "b_account"
             ));
     }
 
@@ -123,13 +147,15 @@ class CustomAuthController extends Controller
     }
 
 
-    public function getAdminOrders() {
+    public function getAdminOrders()
+    {
         $orders = Order::all();
 
         return view("auth.acp.orders", compact("orders"));
     }
 
-    public function getAdminPaydOrders() {
+    public function getAdminPaydOrders()
+    {
         $orders = Order::all()->where("status", "=", "1");
         $orders->transform(function ($order, $key) {
             $order->cart = unserialize($order->cart);
@@ -138,88 +164,161 @@ class CustomAuthController extends Controller
         return view("auth.acp.paydOrders", compact("orders"));
     }
 
-    public function getAdminProoducts() {
+    public function getAdminProoducts()
+    {
         $products = Product::all();
-        $sizers = Sizer::all();
+        $sizers   = Sizer::all();
 
         return view("auth.acp.products", compact("products", "sizers"));
     }
 
-    public function getAdminEditProduct($id) {
+    public function getAdminEditProduct($id)
+    {
         $product = Product::findOrFail($id);
 
 
         return $product;
     }
 
-    public function postAdminEditProduct(Request $request, $id) {
+    public function postAdminEditProduct(Request $request, $id)
+    {
 
-        $product = Product::findOrFail($id);
+        try {
+            DB::beginTransaction();
 
-        $this->validate($request, [
-            "product_name" => "max:60",
-            "product_description" => "max:191",
-        ]);
+            $product = Product::findOrFail($id);
 
-        $product->name = $request->input("product_name");
-        $product->description = $request->input("product_description");
-        $product->weight = $request->input("product_weight");
-        $product->price = $request->input("product_price");
+            $this->validate($request, [
+                "product_name"        => "max:60",
+                "product_description" => "max:191",
+            ]);
 
-        $product->save();
+            $product->name        = $request->input("product_name");
+            $product->description = $request->input("product_description");
+            $product->weight      = $request->input("product_weight");
+            $product->price       = $request->input("product_price");
+
+            $product->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
 
         return redirect(route("auth.adminProoducts"));
     }
-    public function postAdminDeleteProduct($id) {
-        $product = Product::findOrFail($id);
-        $product->delete();
 
-        return redirect()->back()->with("msg","Produkt s číslom #$id - $product->name bol vymazaný.");
+    public function postAdminDeleteProduct($id)
+    {
+        try {
+            DB::beginTransaction();
+            $product = Product::findOrFail($id);
+            $product->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("msg", "Produkt s číslom #$id - $product->name bol vymazaný.");
     }
 
-    public function getAdminProductImages($id) {
+    public function getAdminProductImages($id)
+    {
         $images = Image::all()->where("product_id", "=", "$id");
 
         return $images;
         //return view("acp.images", compact("images"));
     }
 
-    public function postAdminDeleteOrder($id) {
-        $order = Order::findOrFail($id);
-        $order->delete();
+    public function postAdminDeleteOrder($id)
+    {
+        try {
+            DB::beginTransaction();
 
-        return redirect()->back()->with("msg","Obejnávka s číslom #$id bola vymazaný.");
+            $order = Order::findOrFail($id);
+            $order->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("msg", "Obejnávka s číslom #$id bola vymazaný.");
     }
 
-    public function postAdminChangeOrderToPayd($id) {
-        $order = Order::findOrFail($id);
-        $order->status = 1;
-        $order->save();
+    public function postAdminChangeOrderToPayd($id)
+    {
+        try {
+            DB::beginTransaction();
 
-        return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Zaplatené.");
+            $order         = Order::findOrFail($id);
+            $order->status = 1;
+            $order->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("msg", "Status objednávky s číslom #$id bol zmeneny na Zaplatené.");
     }
 
-    public function postAdminChangeOrderToShipped($id) {
-        $order = Order::findOrFail($id);
-        $order->status = 2;
-        $order->save();
+    public function postAdminChangeOrderToShipped($id)
+    {
+        try {
+            DB::beginTransaction();
 
-        return redirect()->back()->with("msg","Status objednávky s číslom #$id bol zmeneny na Odoslané.");
+            $order         = Order::findOrFail($id);
+            $order->status = 2;
+            $order->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+
+        return redirect()->back()->with("msg", "Status objednávky s číslom #$id bol zmeneny na Odoslané.");
     }
 
-    public function getShippingMethods() {
+    public function getShippingMethods()
+    {
         $shipping = Shipping::all();
 
         return view("auth.acp.shippingMethods", compact("shipping"));
     }
-    public function  addShippingMethod(Request $request) {
 
-        $shipping = new Shipping();
-        $shipping->text = $request->input("text");
+    public function addShippingMethod(Request $request)
+    {
+
+        $shipping             = new Shipping();
+        $shipping->text       = $request->input("text");
         $shipping->max_weight = $request->input("weight");
-        $shipping->price = $request->input("price");
+        $shipping->price      = $request->input("price");
 
-        return redirect()->back()->with("msg","Nový sposob dopravy bol úspešne pridaný.");
+        return redirect()->back()->with("msg", "Nový sposob dopravy bol úspešne pridaný.");
+    }
+
+    public function postAdminSetBankAccountNumber(Request $request) {
+        $this->validate($request, [
+           "value" => "required|min:24|max:24"
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $b_account = Info::findOrFail(1);
+            $b_account->value = $request->input("value");
+            $b_account->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with("msg", "Nastala Chyba!");
+        }
+
+        return redirect()->back()->with("msg", "Číslo účtu bolo úspešne upravené");
     }
 
 
