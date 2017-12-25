@@ -35,30 +35,43 @@ Route::group(["prefix" => "auth"], function () {
                 ->name("auth.adminProductImage");
 
             // POST - CustomAuthController
+            // delete product based on ID
             Route::post("acp/product/delete/{id}", "CustomAuthController@postAdminDeleteProduct")
                 ->name("auth.deleteAdminProduct");
+            // delete order based on ID
             Route::post("acp/order/delete/{id}", "CustomAuthController@postAdminDeleteOrder")
                 ->name("auth.deleteAdminOrder");
+            // Order status change from Ordered -> Payd based on ID
             Route::post("acp/order/status-1/{id}", "CustomAuthController@postAdminChangeOrderToPayd")
                 ->name("auth.changeOrderToPayd");
+            // Order status change from Payd -> Shipped based on ID
             Route::post("acp/order/status-2/{id}", "CustomAuthController@postAdminChangeOrderToShipped")
                 ->name("auth.changeOrderToShipped");
+            // Set IBAN
             Route::post("acp/infos/set-bankNumber/", "CustomAuthController@postAdminSetBankAccountNumber")
                 ->name("auth.setBankAccountNumber");
 
             // POST - ProductController
+            // Add PRODUCT type / category
+            // Required to add Stock
             Route::post("acp/productType/add", "ProductController@postAdminAddProductType")
                 ->name("admin.addProductType");
+            // Add PRODUCT
             Route::post("acp/product/add", "ProductController@postAdminAddProduct")
                 ->name("admin.addProduct");
+            // Add PRODUCT Stock
+            // Required to list product
             Route::post("acp/product/stock/add", "ProductController@postAdminAddProductStock")
                 ->name("admin.addProductStock");
+            // Add SHIPPING Option
+            // Required to make checkout
             Route::post("acp/shipping/add", "ProductController@postAdminAddShippingOption")
                 ->name("admin.addShippingOption");
 
             // not yet done
             Route::get("/acp/product/edit/{id}", "CustomAuthController@getAdminEditProduct")
                 ->name("auth.adminEditProduct");
+            // not yet done
             Route::post("/acp/product/edit", "CustomAuthController@postAdminEditProduct")
                 ->name("auth.postAdminEditProduct");
         });
