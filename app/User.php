@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -28,7 +29,12 @@ class User extends Authenticatable
     ];
 
     public function isAdmin() {
-        return $this->email === "SnowFox.sk@icloud.com";
+        try {
+            Role::where("user_id", "=", $this->id)->where("role", "=", "333")->firstOrFail();
+            return true;
+        } catch (ModelNotFoundException $e) {
+            return false;
+        }
     }
 
     public function orders() {
