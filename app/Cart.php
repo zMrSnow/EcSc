@@ -34,28 +34,8 @@ class Cart
      */
     public function add($item, $id, $size)
     {
-        switch ($size) {
-            case 1:
-                $size = "XS";
-                break;
-            case 2:
-                $size = "S";
-                break;
-            case 3:
-                $size = "M";
-                break;
-            case 4:
-                $size = "L";
-                break;
-            case 5:
-                $size ="XL";
-                break;
-            case 6:
-                $size ="XXL";
-                break;
-            default:
-                $size = "zlá veľskosť";
-        }
+        $size = Sizer::findOrFail($size)->name;
+
         $storedItems = ["qty" => 0, "price" => $item->price, "item" => $item, "info" => $this->info]; // nastavyme default na 0
         if ($this->items) {
             if (array_key_exists($id, $this->items)) {
