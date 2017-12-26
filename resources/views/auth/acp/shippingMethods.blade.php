@@ -20,6 +20,7 @@
                             <th>Názov</th>
                             <th>Maximalná váha</th>
                             <th>Cena</th>
+                            <th>Úprava</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -29,6 +30,12 @@
                                 <td>{{$shipp->text}} €</td>
                                 <td>{{$shipp->max_weight}}</td>
                                 <td>{{$shipp->price}}</td>
+                                <td>
+                                    <form action="{{route("auth.deleteAdminShipping", $shipp->id)}}" method="post">
+                                        {{ csrf_field() }}
+                                        <button type="submit" class="btn btn-outline-danger fa fa-trash"></button>
+                                    </form>
+                                </td>
 
                             </tr>
                         @empty

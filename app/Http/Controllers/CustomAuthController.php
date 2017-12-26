@@ -382,5 +382,19 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg", "PayPal client id a secret boli zmenené");
     }
 
-
+    public function postAdminDeleteShippingMethod($id) {
+        try {
+            DB::beginTransaction();
+            $shipp = Shipping::findOrFail($id);
+            $shipp->delete();
+            DB::commit();
+            return redirect()->back()->with("msg", "Úspešne si vymazal/a typ poštovného");
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            return redirect()->back()->with("msg", "Prístuk k neexistujucému typu poštovného nieje možný");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with("msg", "Nastala chyba skús to neskôr");
+        }
+    }
 }

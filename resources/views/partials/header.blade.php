@@ -55,9 +55,9 @@
                 <li class="nav-item">
                     <a href="{{route("product.home")}}" class="nav-link {{Nav::isRoute("product.home", "active")}}">Domov</a>
                 </li>
-                <li class="nav-item">
+                {{--<li class="nav-item">
                     <a href="" class="nav-link">Kontakt</a>
-                </li>
+                </li>--}}
             </ul>
             <div class="right-col d-flex align-items-lg-center flex-column flex-lg-row">
                 <!-- Search Button-->
