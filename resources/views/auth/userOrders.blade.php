@@ -82,9 +82,9 @@
                             Celkova suma: € {{$order->price}}
                             @if($order->status == 0)
                                 <form action="{{route("paypal.pay", $order->id)}}" method="post">
-                                    <button type="submit" class="btn btn-outline-info pull-left">
-                                        <span class="fa fa-paypal"></span> PayPal - SandBox
-                                    </button>
+                                    {{--<button type="submit" class="disabled btn btn-outline-info pull-left">
+                                        <span class="fa fa-paypal"></span> PayPal - Vypnuté
+                                    </button>--}}
                                     <a href="#" class="btn btn-outline-info pull-left" data-toggle="modal" data-target="#bankPayment">
                                        <span class="fa fa-bank"></span> Prevodom na účet
                                     </a>
@@ -180,10 +180,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="price" class="form-label">Číslo účtu</label>
                         <kbd>
-                            {{$info->value}}
+                            {{$info->iban}}
                         </kbd>
                         <br>
                         <label for="price" class="form-label">Informácia pre príjemcu</label>

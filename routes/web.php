@@ -3,10 +3,14 @@
 
 use App\Product;
 
-Route::get('/', "ProductController@getHome")->name("product.home");
-Route::post('/add-to-cart/{id}/{size}', "ProductController@postAjaxAddToCart")->name("product.addToCartAjax");
-Route::get('/shoping-cart', "ProductController@getShopingCart")->name("product.shopingCart");
-Route::get('/shoping-cart/reduce-item/{id}', "ProductController@getReduceByItems")->name("product.reduceByItemCart");
+Route::get('/', "ProductController@getHome")
+    ->name("product.home");
+Route::post('/add-to-cart/{id}/{size}', "ProductController@postAjaxAddToCart")
+    ->name("product.addToCartAjax");
+Route::get('/shoping-cart', "ProductController@getShopingCart")
+    ->name("product.shopingCart");
+Route::get('/shoping-cart/reduce-item/{id}', "ProductController@getReduceByItems")
+    ->name("product.reduceByItemCart");
 
 Route::group(["prefix" => "auth"], function () {
     Route::group(["middleware" => "guest"], function () {
@@ -41,6 +45,9 @@ Route::group(["prefix" => "auth"], function () {
             // delete order based on ID
             Route::post("acp/order/delete/{id}", "CustomAuthController@postAdminDeleteOrder")
                 ->name("auth.deleteAdminOrder");
+            // delete shipping method based on ID
+            Route::post("acp/shipping/delete/{id}", "CustomAuthController@postAdminDeleteShippingMethod")
+                ->name("auth.deleteAdminShipping");
             // Order status change from Ordered -> Payd based on ID
             Route::post("acp/order/status-1/{id}", "CustomAuthController@postAdminChangeOrderToPayd")
                 ->name("auth.changeOrderToPayd");
