@@ -42,18 +42,18 @@
         </div>
         <div class="collapse" id="collapsePP">
             <div class="card card-body">
-                <form action="" method="post">
+                <form action="{{route("auth.setPayPalDev")}}" method="post">
                 {{ csrf_field() }}
                 <!-- Invoice Address-->
                     <div class="row">
                         <a href="https://developer.paypal.com/" target="_blank" class="mx-3">Developer PayPal</a>
                         <div class="form-group col-md-12">
                             <label for="value" class="form-label">PayPal ID</label>
-                            <input id="value" type="text" name="paypal_id" value="" placeholder="" class="form-control">
+                            <input id="value" type="text" name="paypal_id" value="{{$client_id}}" placeholder="" class="form-control">
                         </div>
                         <div class="form-group col-md-12">
                             <label for="value" class="form-label">PayPal SECRET</label>
-                            <input id="value" type="text" name="paypal_secret" value="" placeholder="" class="form-control">
+                            <input id="value" type="text" name="paypal_secret" value="{{$secret}}" placeholder="" class="form-control">
                         </div>
                     </div>
                     <div class="modal-footer">

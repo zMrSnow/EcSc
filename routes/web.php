@@ -50,6 +50,9 @@ Route::group(["prefix" => "auth"], function () {
             // Set IBAN
             Route::post("acp/infos/set-bankNumber/", "CustomAuthController@postAdminSetBankAccountNumber")
                 ->name("auth.setBankAccountNumber");
+            // Set PayPal
+            Route::post("acp/infos/set-paypal-dev/", "CustomAuthController@postAdminSetPayPalDev")
+                ->name("auth.setPayPalDev");
 
             // POST - ProductController
             // Add PRODUCT type / category

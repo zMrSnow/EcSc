@@ -1,9 +1,22 @@
 <?php
 
+use App\Info;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+/*try {
+    $client_id = Info::where("name", "=", "paypal_client_id")->firstOrFail();
+    $client_id = $client_id->value;
+    $secret = Info::where("name", "=", "paypal_secret")->firstOrFail();
+    $secret = $secret->value;
+} catch (ModelNotFoundException $e) {
+    $client_id = "";
+    $secret = "";
+}*/
+
 return array(
     /** set your paypal credential **/
-    'client_id' =>'AeSF4NELkJMVzvYB7-8UlXDc40GHB7PdzYodb0DfEqwUN47PdQTJ3Y5Ck33FoY1MZ4fCgazA6RCwN6YF',
-    'secret' => 'EBqhN9EsJ6r3FMw7xfVAVEw0qCuShJaKmnd-cLC26hLak7_CI4qTkfC3ZU58YGWKPtBclUr5928XwOJ5',
+    'client_id' => "",
+    'secret' => "",
     /**
      * SDK configuration
      */

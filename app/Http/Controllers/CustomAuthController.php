@@ -11,8 +11,10 @@ use App\Size;
 use App\Sizer;
 use Auth;
 use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rules\In;
 use Mockery\Exception;
 use Session;
 
@@ -120,6 +122,16 @@ class CustomAuthController extends Controller
             $storage += $item->quantities;
         }
 
+        try {
+            $client_id = Info::where("name", "=", "paypal_client_id")->firstOrFail();
+            $client_id = $client_id->value;
+            $secret    = Info::where("name", "=", "paypal_secret")->firstOrFail();
+            $secret    = $secret->value;
+        } catch (ModelNotFoundException $e) {
+            $client_id = "";
+            $secret    = "";
+        }
+
 
         return view("auth.adminControlPanel",
             compact("products",
@@ -131,7 +143,9 @@ class CustomAuthController extends Controller
                 "completed_orders",
                 "storage",
                 "shipping",
-                "b_account"
+                "b_account",
+                "client_id",
+                "secret"
             ));
     }
 
@@ -299,15 +313,23 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg", "Nový sposob dopravy bol úspešne pridaný.");
     }
 
-    public function postAdminSetBankAccountNumber(Request $request) {
+    public function postAdminSetBankAccountNumber(Request $request)
+    {
         $this->validate($request, [
-           "value" => "required|min:24|max:24"
+            "value" => "required|min:24|max:24"
         ]);
 
         try {
             DB::beginTransaction();
 
-            $b_account = Info::findOrFail(1);
+            $b_account        = Info::where("name", "=", "bank")->firstOrFail();
+            $b_account->value = $request->input("value");
+            $b_account->save();
+
+            DB::commit();
+        } catch (ModelNotFoundException $e) {
+            $b_account = new Info();
+            $b_account->name = "bank";
             $b_account->value = $request->input("value");
             $b_account->save();
 
@@ -319,6 +341,45 @@ class CustomAuthController extends Controller
         }
 
         return redirect()->back()->with("msg", "Číslo účtu bolo úspešne upravené");
+    }
+
+    public function postAdminSetPayPalDev(Request $request) {
+        $this->validate($request, [
+            "paypal_id" => "required",
+            "paypal_secret" => "required"
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $client_id = Info::where("name", "=", "paypal_client_id")->firstOrFail();
+            $client_id->value = $request->input("paypal_id");
+            $client_id->save();
+
+            $secret    = Info::where("name", "=", "paypal_secret")->firstOrFail();
+            $secret->value    = $request->input("paypal_secret");
+            $secret->save();
+
+            DB::commit();
+        } catch (ModelNotFoundException $e) {
+            $client_id = new Info();
+            $client_id->name = "paypal_client_id";
+            $client_id->value = $request->input("paypal_id");
+            $client_id->save();
+
+            $secret    = new Info();
+            $secret->name = "paypal_secret";
+            $secret->value    = $request->input("paypal_secret");
+            $secret->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()->back()->with("msg", "Nastala Chyba!");
+        }
+
+        return redirect()->back()->with("msg", "PayPal client id a secret boli zmenené");
     }
 
 
