@@ -9,6 +9,8 @@
 namespace App;
 
 
+use App\Models\Sizer;
+
 class Cart
 {
     public $items; // array contains all products in card

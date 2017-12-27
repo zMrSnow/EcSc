@@ -2,173 +2,85 @@
 
 namespace App\Http\Controllers;
 
-use App\Cart;
 use App\Http\Requests\AddProductStockRequest;
 use App\Http\Requests\AddShippingOptionRequest;
 use App\Http\Requests\CheckoutRequest;
 use App\Http\Requests\CreateProductRequest;
 use App\Http\Requests\CreateProductTypeRequest;
-use App\Image;
-use App\Order;
-use App\Product;
-use App\Shipping;
-use App\Size;
-use App\Sizer;
-use Auth;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Repositories\ProductRepository;
+
 use Illuminate\Http\Request;
-use Mockery\Exception;
-use Session;
 
 class ProductController extends Controller
 {
+    protected $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
 
     public function getHome()
     {
-        $products = Product::all();
+        $products = $this->productRepository->productsAll();
         return view('shop.home', compact("products"));
     }
 
     public function postAjaxAddToCart(Request $request, $id, $size)
     {
-        $product = Product::findOrFail($id);
-        $oldCart = Session::has("cart") ? Session::get("cart") : null;
-        $cart    = new Cart($oldCart);
-        $cart->add($product, $product->id, $size);
+        $this->productRepository->addToCardAjax($request, $id, $size);
 
-        $request->session()->put("cart", $cart);
     }
-
-
 
     public function getShopingCart()
     {
-        if (!Session::has("cart")) {
-            return view("shop.shopingCart");
-        }
-        $cart = new Cart(Session::get("cart"));
-        $products = $cart->items;
-        $totalPrice = $cart->totalPrice;
-        $totalQty = $cart->totalQty;
-        //return $products;
+        $values =  $this->productRepository->shoppingCart();
+        $products   = $values->items;
+        $totalPrice = $values->totalPrice;
+        $totalQty   = $values->totalQty;
         return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
 
     }
 
     public function getReduceByOneItem($id) {
-        $oldCart = Session::has("cart") ? Session::get("cart") : null;
-        $cart    = new Cart($oldCart);
-        $cart->reduceByOne($id);
-
-        Session::put("cart", $cart);
+        $this->productRepository->reduceByOne($id);
         return redirect()->back()->with("msg","Produkt bol odobraný.");
     }
 
     public function getReduceByItems($id) {
-        $oldCart = Session::has("cart") ? Session::get("cart") : null;
-        $cart    = new Cart($oldCart);
-        $cart->reducebyItem($id);
-
-        if (count($cart->items) > 0) {
-            Session::put("cart", $cart);
-        } else {
-            Session::forget("cart");
-        }
-
+        $this->productRepository->reduceByItem($id);
         return redirect()->back()->with("msg","Produkt bol úspešne odobraný z vašeho nákupného košíka.");
     }
 
     public function checkout() {
-        if (!Session::has("cart")) {
-            return redirect()->back();
-        }
-        $oldCart = Session::get("cart");
-        $cart = new Cart($oldCart);
+        $cart = $this->productRepository->checkout();
         $total = $cart->totalPrice;
         $totalWeight = $cart->totalWeight;
-
-        $shippings = Shipping::all()->where("max_weight", ">=", $totalWeight);
-
+        $shippings = $this->productRepository->parcialCheckoutShipping($totalWeight);
         return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
     }
     public function postCheckout(CheckoutRequest $request) {
-        if (!Session::has("cart")) {
-            return redirect()->back();
-        }
-        $oldCart = Session::get("cart");
-        $cart = new Cart($oldCart);
-
-        $order = new Order();
-        $order->cart = serialize($cart);
-        $order->adress = $request->input("address");
-        $order->city = $request->input("city");
-        $order->psc = $request->input("psc");
-        $order->name = $request->input("fname") . " " . $request->input("lname");
-
-        $shippingPrice = Shipping::findOrFail($request->input("shipping_type"))->price;
-
-        $order->price = $cart->totalPrice + $shippingPrice;
-        $order->weight = $cart->totalWeight;
-        $order->shipping_type = $request->input("shipping_type");
-
-        Auth::user()->orders()->save($order);
-
-        Session::forget("cart");
+        $this->productRepository->postCheckout($request);
         return redirect()->route("auth.orders")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
     }
 
     public function postAdminAddProductType(CreateProductTypeRequest $request) {
-        $sizer = new Sizer();
-        $sizer->name = $request->input("name");
-        $sizer->save();
-        return redirect()->back()->with("msg","Typ produktu s názvom $sizer->name bol vytvorený.");
+        $this->productRepository->postCreateProductType($request);
+        return redirect()->back()->with("msg","Typ/Veľkosť produktu bol vytvorený.");
     }
 
     public function postAdminAddProduct(CreateProductRequest $request) {
-
-        $product = new Product();
-        $product->name = $request->input("name");
-        $product->description = $request->input("description");
-        $product->weight = $request->input("weight");
-        $product->price = $request->input("price");
-        $product->save();
-
-        $image = new Image();
-        $image->product_id = $product->id;
-        $image->img = $request->input("img");
-        $image->save();
-
-        return redirect()->back()->with("msg","Produkt s názvom $product->name bol vytvorený.");
+        $this->productRepository->postCreateProduct($request);
+        return redirect()->back()->with("msg","Produkt bol úspešne vytvorený.");
     }
 
     public function postAdminAddProductStock(AddProductStockRequest $request) {
-
-        try {
-            $size = Size::where("product_id", "=", $request->input("product"))
-                ->where("sizer_id", "=", $request->input("size"))
-                ->firstOrFail();
-
-            $size->quantities += $request->input("qty");
-        } catch (ModelNotFoundException $e) {
-            $size = new Size();
-            $size->product_id = $request->input("product");
-            $size->sizer_id = $request->input("size");
-            $size->quantities = $request->input("qty");
-        }
-
-        $size->save();
-
+        $this->productRepository->addProductStock($request);
         return redirect()->back()->with("msg","Bolo pridane množstvo do skladu.");
     }
 
     public function postAdminAddShippingOption(AddShippingOptionRequest $request) {
-
-        $shipping = new Shipping();
-        $shipping->text = $request->input("name");
-        $shipping->max_weight = $request->input("weight");
-        $shipping->price = $request->input("price");
-        $shipping->save();
-
+        $this->productRepository->postCreateShippingOption($request);
         return redirect()->back()->with("msg","Bola pridaná dalšia možnosť dopravy");
     }
 }
