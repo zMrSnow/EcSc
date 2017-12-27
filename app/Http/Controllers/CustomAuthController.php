@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EditProductRequest;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\RegisterUserRequest;
+use App\Http\Requests\SetBankAccountRequest;
+use App\Http\Requests\SetPayPalRequest;
 use App\Image;
 use App\Info;
 use App\Order;
@@ -20,26 +25,10 @@ use Session;
 
 class CustomAuthController extends Controller
 {
-
-    /*
-     * Custom validation
-     * fnction
-     */
-    public function validation(Request $request)
-    {
-        return $this->validate($request, [
-            'name'     => 'required|max:255',
-            'email'    => 'required|email|unique:users|max:255',
-            'password' => 'required|confirmed|min:4|max:255',
-        ]);
-    }
-
-    public function postRegister(Request $request)
+    public function postRegister(RegisterUserRequest $request)
     {
         try {
             DB::beginTransaction();
-
-            $this->validation($request);
 
             $request['password'] = bcrypt($request->password);
             $user                = User::create($request->all());
@@ -59,13 +48,8 @@ class CustomAuthController extends Controller
         return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, už si aj prihlásený.");
     }
 
-    public function postLogin(Request $request)
+    public function postLogin(LoginUserRequest $request)
     {
-        $this->validate($request, [
-            'email'    => 'required|email|max:255',
-            'password' => 'required|max:255',
-        ]);
-
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
             if (Session::has("oldUrl")) {
                 $oldUrl = Session::get("oldUrl");
@@ -194,19 +178,12 @@ class CustomAuthController extends Controller
         return $product;
     }
 
-    public function postAdminEditProduct(Request $request, $id)
+    public function postAdminEditProduct(EditProductRequest $request, $id)
     {
-
         try {
             DB::beginTransaction();
 
             $product = Product::findOrFail($id);
-
-            $this->validate($request, [
-                "product_name"        => "max:60",
-                "product_description" => "max:191",
-            ]);
-
             $product->name        = $request->input("product_name");
             $product->description = $request->input("product_description");
             $product->weight      = $request->input("product_weight");
@@ -313,12 +290,8 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg", "Nový sposob dopravy bol úspešne pridaný.");
     }
 
-    public function postAdminSetBankAccountNumber(Request $request)
+    public function postAdminSetBankAccountNumber(SetBankAccountRequest $request)
     {
-        $this->validate($request, [
-            "value" => "required|min:24|max:24"
-        ]);
-
         try {
             DB::beginTransaction();
 
@@ -343,12 +316,7 @@ class CustomAuthController extends Controller
         return redirect()->back()->with("msg", "Číslo účtu bolo úspešne upravené");
     }
 
-    public function postAdminSetPayPalDev(Request $request) {
-        $this->validate($request, [
-            "paypal_id" => "required",
-            "paypal_secret" => "required"
-        ]);
-
+    public function postAdminSetPayPalDev(SetPayPalRequest $request) {
         try {
             DB::beginTransaction();
 
@@ -396,5 +364,6 @@ class CustomAuthController extends Controller
             DB::rollBack();
             return redirect()->back()->with("msg", "Nastala chyba skús to neskôr");
         }
+
     }
 }
