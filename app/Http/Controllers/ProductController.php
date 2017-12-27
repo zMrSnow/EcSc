@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Cart;
+use App\Http\Requests\AddProductStockRequest;
+use App\Http\Requests\AddShippingOptionRequest;
+use App\Http\Requests\CheckoutRequest;
+use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\CreateProductTypeRequest;
 use App\Image;
 use App\Order;
 use App\Product;
@@ -86,21 +91,10 @@ class ProductController extends Controller
 
         return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
     }
-    public function postCheckout(Request $request) {
+    public function postCheckout(CheckoutRequest $request) {
         if (!Session::has("cart")) {
             return redirect()->back();
         }
-
-        $this->validate($request, [
-            'address'    => 'required|max:191',
-            'city' => 'required|max:30',
-            'psc' => 'required|min:4|max:6',
-            'fname' => 'required|max:30',
-            'lname' => 'required|max:30',
-        ]);
-
-
-
         $oldCart = Session::get("cart");
         $cart = new Cart($oldCart);
 
@@ -123,23 +117,15 @@ class ProductController extends Controller
         return redirect()->route("auth.orders")->with("msg", "Úspešne si vytvoril objednávku, o potvrdeni vás budeme informovať.");
     }
 
-    public function postAdminAddProductType(Request $request) {
-        $this->validate($request, [
-            "name" => "required|unique:sizers"
-        ]);
+    public function postAdminAddProductType(CreateProductTypeRequest $request) {
         $sizer = new Sizer();
         $sizer->name = $request->input("name");
         $sizer->save();
         return redirect()->back()->with("msg","Typ produktu s názvom $sizer->name bol vytvorený.");
     }
 
-    public function postAdminAddProduct(Request $request) {
-        $this->validate($request, [
-           "name" => "required|max:191",
-            "description" => "required",
-            "weight" => "required",
-            "img" => "required"
-        ]);
+    public function postAdminAddProduct(CreateProductRequest $request) {
+
         $product = new Product();
         $product->name = $request->input("name");
         $product->description = $request->input("description");
@@ -155,10 +141,7 @@ class ProductController extends Controller
         return redirect()->back()->with("msg","Produkt s názvom $product->name bol vytvorený.");
     }
 
-    public function postAdminAddProductStock(Request $request) {
-        $this->validate($request, [
-            "product" => ""
-        ]);
+    public function postAdminAddProductStock(AddProductStockRequest $request) {
 
         try {
             $size = Size::where("product_id", "=", $request->input("product"))
@@ -178,12 +161,7 @@ class ProductController extends Controller
         return redirect()->back()->with("msg","Bolo pridane množstvo do skladu.");
     }
 
-    public function postAdminAddShippingOption(Request $request) {
-        $this->validate($request, [
-            "name" => "required",
-            "weight" => "required",
-            "price" => "required"
-        ]);
+    public function postAdminAddShippingOption(AddShippingOptionRequest $request) {
 
         $shipping = new Shipping();
         $shipping->text = $request->input("name");
