@@ -59,8 +59,16 @@ class CustomAuthRepository
 
     public function viewACP()
     {
-        $products          = Product::all();
-        $b_account         = Info::find(1);
+        $products = Product::all();
+        try {
+            $b_account = Info::where("name", "=", "bank")->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $b_account        = new Info();
+            $b_account->name  = "bank";
+            $b_account->value = "";
+            $b_account->save();
+        }
+
         $availble_products = 0;
         foreach ($products as $product) {
             if (count($product->sizes) > 0) {
