@@ -120,34 +120,6 @@ class CustomAuthRepository
             ));
     }
 
-    public function viewOrders()
-    {
-        $orders = Auth::user()->orders;
-        $orders->transform(function ($order, $key) {
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
-        $info = Info::findOrFail(1);
-        return view("auth.userOrders", compact("orders", "info"));
-    }
-
-    public function viewPaydOrders()
-    {
-        $orders = Order::all()->where("status", "=", "1");
-        $orders->transform(function ($order, $key) {
-            $order->cart = unserialize($order->cart);
-            return $order;
-        });
-        return view("auth.acp.paydOrders", compact("orders"));
-    }
-
-    public function viewACPProducts()
-    {
-        $products = Product::all();
-        $sizers   = Sizer::all();
-
-        return view("auth.acp.products", compact("products", "sizers"));
-    }
 
     public function postEditProduct($request, $id)
     {
@@ -169,79 +141,6 @@ class CustomAuthRepository
         return redirect(route("auth.adminProoducts"));
     }
 
-    public function postDeleteProduct($id)
-    {
-        try {
-            DB::beginTransaction();
-            $product = Product::findOrFail($id);
-            $product->delete();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-        }
-        return redirect()->back()->with("msg", "Produkt s číslom #$id - $product->name bol vymazaný.");
-    }
-
-    public function postDeleteOrder($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $order = Order::findOrFail($id);
-            $order->delete();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-        }
-
-        return redirect()->back()->with("msg", "Obejnávka s číslom #$id bola vymazaný.");
-    }
-
-    public function orderToPayd($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $order         = Order::findOrFail($id);
-            $order->status = 1;
-            $order->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-        }
-
-        return redirect()->back()->with("msg", "Status objednávky s číslom #$id bol zmeneny na Zaplatené.");
-    }
-
-    public function orderToShipped($id)
-    {
-        try {
-            DB::beginTransaction();
-
-            $order         = Order::findOrFail($id);
-            $order->status = 2;
-            $order->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-        }
-
-        return redirect()->back()->with("msg", "Status objednávky s číslom #$id bol zmeneny na Odoslané.");
-    }
-
-    public function createShippingMethod($request)
-    {
-        $shipping             = new Shipping();
-        $shipping->text       = $request->input("text");
-        $shipping->max_weight = $request->input("weight");
-        $shipping->price      = $request->input("price");
-
-        return redirect()->back()->with("msg", "Nový sposob dopravy bol úspešne pridaný.");
-    }
 
     public function setIBAN($request)
     {
@@ -269,56 +168,4 @@ class CustomAuthRepository
         return redirect()->back()->with("msg", "Číslo účtu bolo úspešne upravené");
     }
 
-    public function setPayPal($request)
-    {
-        try {
-            DB::beginTransaction();
-
-            $client_id        = Info::where("name", "=", "paypal_client_id")->firstOrFail();
-            $client_id->value = $request->input("paypal_id");
-            $client_id->save();
-
-            $secret        = Info::where("name", "=", "paypal_secret")->firstOrFail();
-            $secret->value = $request->input("paypal_secret");
-            $secret->save();
-
-            DB::commit();
-        } catch (ModelNotFoundException $e) {
-            $client_id        = new Info();
-            $client_id->name  = "paypal_client_id";
-            $client_id->value = $request->input("paypal_id");
-            $client_id->save();
-
-            $secret        = new Info();
-            $secret->name  = "paypal_secret";
-            $secret->value = $request->input("paypal_secret");
-            $secret->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            return redirect()->back()->with("msg", "Nastala Chyba!");
-        }
-
-        return redirect()->back()->with("msg", "PayPal client id a secret boli zmenené");
-    }
-
-    public function postDeleteShippingMethod($id)
-    {
-        try {
-            DB::beginTransaction();
-            $shipp = Shipping::findOrFail($id);
-            $shipp->delete();
-            DB::commit();
-            return redirect()->back()->with("msg", "Úspešne si vymazal/a typ poštovného");
-        } catch (ModelNotFoundException $e) {
-            DB::rollBack();
-            return redirect()->back()->with("msg", "Prístuk k neexistujucému typu poštovného nieje možný");
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with("msg", "Nastala chyba skús to neskôr");
-        }
-
-    }
 }

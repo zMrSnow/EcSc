@@ -11,6 +11,7 @@ use App\Models\Shipping;
 use App\Models\Size;
 use App\Models\Sizer;
 use Auth;
+use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Session;
 
@@ -26,6 +27,14 @@ class ProductRepository
     public function productsAll()
     {
         return $this->model::all();
+    }
+
+    public function indexACP()
+    {
+        $products = Product::all();
+        $sizers   = Sizer::all();
+
+        return view("auth.acp.products", compact("products", "sizers"));
     }
 
     public function addToCardAjax($request, $id, $size)
@@ -147,12 +156,27 @@ class ProductRepository
         $size->save();
     }
 
-    public function postCreateShippingOption($request)
+    /**
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
     {
-        $shipping = new Shipping();
-        $shipping->text = $request->input("name");
-        $shipping->max_weight = $request->input("weight");
-        $shipping->price = $request->input("price");
-        $shipping->save();
+        try {
+            DB::beginTransaction();
+            $product = Product::findOrFail($id);
+            $product->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
+        return redirect()->back()->with("msg", "Produkt s číslom #$id - $product->name bol vymazaný.");
+    }
+
+    public function edit($id)
+    {
+        $product = Product::findOrFail($id);
+        return $product;
     }
 }

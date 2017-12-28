@@ -79,8 +79,8 @@ class ProductController extends Controller
         return redirect()->back()->with("msg","Bolo pridane množstvo do skladu.");
     }
 
-    public function postAdminAddShippingOption(AddShippingOptionRequest $request) {
-        $this->productRepository->postCreateShippingOption($request);
-        return redirect()->back()->with("msg","Bola pridaná dalšia možnosť dopravy");
+    public function destroy($id)
+    {
+        return $this->productRepository->destroy($id);
     }
 }
