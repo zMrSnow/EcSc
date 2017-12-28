@@ -21,6 +21,10 @@ use Session;
 class CustomAuthRepository
 {
 
+    /**
+     * @param $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postRegisterUser($request)
     {
         try {
@@ -44,6 +48,10 @@ class CustomAuthRepository
         return redirect("/")->with("msg", "Práve si sa úspešne zaregistroval, už si aj prihlásený.");
     }
 
+    /**
+     * @param $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function postLogin($request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
@@ -57,6 +65,9 @@ class CustomAuthRepository
         return redirect("/")->with("msgDanger", " Neplatný email alebo heslo.");
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function viewACP()
     {
         $products = Product::all();
@@ -68,7 +79,6 @@ class CustomAuthRepository
             $b_account->value = "";
             $b_account->save();
         }
-
         $availble_products = 0;
         foreach ($products as $product) {
             if (count($product->sizes) > 0) {
@@ -129,6 +139,11 @@ class CustomAuthRepository
     }
 
 
+    /**
+     * @param $request
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function postEditProduct($request, $id)
     {
         try {
@@ -150,6 +165,10 @@ class CustomAuthRepository
     }
 
 
+    /**
+     * @param $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function setIBAN($request)
     {
         try {

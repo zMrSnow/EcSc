@@ -11,6 +11,10 @@ class OrderController extends Controller
 
     protected $orderRepository;
 
+    /**
+     * OrderController constructor.
+     * @param OrderRepository $orderRepository
+     */
     public function __construct(OrderRepository $orderRepository)
     {
         $this->orderRepository = $orderRepository;
@@ -60,11 +64,17 @@ class OrderController extends Controller
         
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showLoggedUser()
     {
         return $this->orderRepository->loggedUserOrders();
     }
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showPayd()
     {
         return $this->orderRepository->showPaydOrders();

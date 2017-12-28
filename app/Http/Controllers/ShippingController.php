@@ -10,6 +10,10 @@ class ShippingController extends Controller
 {
     protected $shippingRepository;
 
+    /**
+     * ShippingController constructor.
+     * @param ShippingRepository $shippingRepository
+     */
     public function __construct(ShippingRepository $shippingRepository)
     {
         $this->shippingRepository = $shippingRepository;
