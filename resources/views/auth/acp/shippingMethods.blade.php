@@ -27,9 +27,9 @@
                         @forelse($shipping as $shipp)
                             <tr>
                                 <td>{{$shipp->id}}</td>
-                                <td>{{$shipp->text}} €</td>
+                                <td>{{$shipp->text}}</td>
                                 <td>{{$shipp->max_weight}}</td>
-                                <td>{{$shipp->price}}</td>
+                                <td>€{{$shipp->price}}</td>
                                 <td>
                                     <form action="{{route("auth.deleteAdminShipping", $shipp->id)}}" method="post">
                                         {{ csrf_field() }}

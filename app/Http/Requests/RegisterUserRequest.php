@@ -28,9 +28,9 @@ class RegisterUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'     => 'required|max:255',
-            'email'    => 'required|email|unique:users|max:255',
-            'password' => 'required|confirmed|min:4|max:255',
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|confirmed|min:4',
         ];
     }
 
@@ -44,7 +44,6 @@ class RegisterUserRequest extends FormRequest
           "email.max" => "Maximalný počet znakov pre email je 255.",
           "password.required" => "Je nutné zadať heslo.",
           "password.min" => "Minimalny počet znakov pre heslo je aspoň 4.",
-          "password.max" => "Maximalný počet znakov pre heslo je 255.",
         ];
     }
 }

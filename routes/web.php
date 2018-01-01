@@ -31,7 +31,7 @@ Route::group(["prefix" => "auth"], function () {
                 ->name("auth.adminOrders");
             Route::get("/acp/paydd-orders", "OrderController@showPayd")
                 ->name("auth.adminPaydOrders");
-            Route::get("/acp/shipping-methods", "ShippingCOntroller@index")
+            Route::get("/acp/shipping-methods", "ShippingController@index")
                 ->name("admin.shippingMethods");
             Route::get("/acp/products-show", "ProductController@indexACP")
                 ->name("auth.adminProoducts");
