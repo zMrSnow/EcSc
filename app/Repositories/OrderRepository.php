@@ -6,6 +6,7 @@ use App\Models\Info;
 use App\Models\Order;
 use Auth;
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrderRepository
 {
@@ -71,7 +72,15 @@ class OrderRepository
             $order->cart = unserialize($order->cart);
             return $order;
         });
-        $info = Info::findOrFail(1);
+        try {
+            $info = Info::where("name", "=", "bank")->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $b_account        = new Info();
+            $b_account->name  = "bank";
+            $b_account->value = "0";
+            $b_account->save();
+            $info = $b_account;
+        }
         return view("auth.userOrders", compact("orders", "info"));
     }
 

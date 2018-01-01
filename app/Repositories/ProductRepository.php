@@ -53,7 +53,11 @@ class ProductRepository
         if (!Session::has("cart")) {
             return view("shop.shopingCart");
         }
-        return $cart = new Cart(Session::get("cart"));
+        $cart = new Cart(Session::get("cart"));
+        $products   = $cart->items;
+        $totalPrice = $cart->totalPrice;
+        $totalQty   = $cart->totalQty;
+        return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
     }
 
     public function reduceByOne($id)
@@ -84,7 +88,11 @@ class ProductRepository
             return redirect()->back();
         }
         $oldCart = Session::get("cart");
-        return $cart = new Cart($oldCart);
+        $cart = new Cart($oldCart);
+        $total = $cart->totalPrice;
+        $totalWeight = $cart->totalWeight;
+        $shippings = $this->parcialCheckoutShipping($totalWeight);
+        return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
     }
 
     public function parcialCheckoutShipping($totalWeight) {

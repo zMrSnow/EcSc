@@ -18,9 +18,10 @@ class ShippingRepository
     public function createShippingMethod($request)
     {
         $shipping             = new Shipping();
-        $shipping->text       = $request->input("text");
+        $shipping->text       = $request->input("name");
         $shipping->max_weight = $request->input("weight");
         $shipping->price      = $request->input("price");
+        $shipping->save();
 
         return redirect()->back()->with("msg", "Nový sposob dopravy bol úspešne pridaný.");
     }

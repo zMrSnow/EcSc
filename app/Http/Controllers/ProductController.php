@@ -33,6 +33,11 @@ class ProductController extends Controller
         return view('shop.home', compact("products"));
     }
 
+    public function indexACP()
+    {
+        return $this->productRepository->indexACP();
+    }
+
     /**
      * @param Request $request
      * @param $id
@@ -49,12 +54,7 @@ class ProductController extends Controller
      */
     public function getShopingCart()
     {
-        $values =  $this->productRepository->shoppingCart();
-        $products   = $values->items;
-        $totalPrice = $values->totalPrice;
-        $totalQty   = $values->totalQty;
-        return view("shop.shopingCart", compact("products", "totalPrice", "totalQty"));
-
+        return $values =  $this->productRepository->shoppingCart();
     }
 
     /**
@@ -79,11 +79,7 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function checkout() {
-        $cart = $this->productRepository->checkout();
-        $total = $cart->totalPrice;
-        $totalWeight = $cart->totalWeight;
-        $shippings = $this->productRepository->parcialCheckoutShipping($totalWeight);
-        return view("shop.checkout", compact("oldCart", "total", "totalWeight", "shippings"));
+       return $this->productRepository->checkout();
     }
 
     /**

@@ -35,7 +35,7 @@
                 @if($order->status == 0)
                     <div class="card break">
                         <div class="card-header">
-                            # {{$order->id}}
+                            Číslo vašej objednávky : # {{$order->id}}
                             @switch($order->status)
                                 @case(0)
                                 <span class="badge badge-danger pull-right">Neuhradené</span>
