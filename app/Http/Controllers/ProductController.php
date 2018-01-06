@@ -33,6 +33,11 @@ class ProductController extends Controller
         return view('shop.home', compact("products"));
     }
 
+    public function indexACP()
+    {
+        return $this->productRepository->indexACP();
+    }
+
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
